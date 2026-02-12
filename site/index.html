@@ -384,6 +384,79 @@
       color: var(--charcoal);
     }
 
+    /* Idea blocks */
+    .idea-blocks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 640px;
+      margin: 24px auto 0;
+    }
+    .idea-block {
+      border-radius: 12px;
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    .idea-block:hover { transform: translateY(-2px); }
+    .idea-block.creative {
+      background: rgba(213, 244, 249, 0.18);
+      border: 1px solid rgba(213, 244, 249, 0.45);
+    }
+    .idea-block.useful {
+      background: rgba(215, 197, 178, 0.15);
+      border: 1px solid rgba(215, 197, 178, 0.4);
+    }
+    .idea-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .idea-block-header h4 {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .idea-block-header .arrow {
+      font-size: 18px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: var(--taupe);
+    }
+    .idea-block.open .arrow { transform: rotate(180deg); }
+    .idea-block p {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--charcoal);
+      margin-top: 4px;
+    }
+    .idea-list {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .idea-block.open .idea-list { max-height: 600px; }
+    .idea-list ol {
+      margin-top: 14px;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .idea-list li {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--charcoal);
+      line-height: 1.5;
+    }
+    .idea-list li strong {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    @media (max-width: 700px) {
+      .idea-blocks { grid-template-columns: 1fr; }
+    }
+
     /* CTA */
     .final-cta {
       text-align: center;
@@ -589,6 +662,63 @@
           <span>Manage configs, check logs, run diagnostics &mdash; all within your safety policy.</span>
         </div>
       </div>
+
+      <div class="idea-blocks">
+        <div class="idea-block creative" onclick="toggleIdea(this)">
+          <div class="idea-block-header">
+            <h4>Creative ideas</h4>
+            <span class="arrow">&#x25BE;</span>
+          </div>
+          <p>Interesting things you didn't know an agent could do. Click to explore.</p>
+          <div class="idea-list">
+            <ol>
+              <li><strong>Generate a personal website</strong> from a resume PDF</li>
+              <li><strong>Turn meeting notes</strong> into formatted action items and follow-up emails</li>
+              <li><strong>Build a quiz</strong> from any textbook chapter or article</li>
+              <li><strong>Create a mood board</strong> by organizing and renaming image collections</li>
+              <li><strong>Write bedtime stories</strong> personalized with your kid's name and interests</li>
+              <li><strong>Draft a D&amp;D campaign</strong> with NPCs, maps, and encounter tables</li>
+              <li><strong>Convert recipes</strong> between metric and imperial, and scale for any group size</li>
+              <li><strong>Compose daily journal prompts</strong> based on your goals and recent entries</li>
+              <li><strong>Generate flashcards</strong> from lecture notes or documentation</li>
+              <li><strong>Write product descriptions</strong> for an online store from a spreadsheet of items</li>
+              <li><strong>Create a reading list</strong> with summaries from a folder of saved articles</li>
+              <li><strong>Build a trivia night</strong> with themed rounds and scoring sheets</li>
+              <li><strong>Rewrite your bio</strong> in 10 different tones (professional, casual, funny, etc.)</li>
+              <li><strong>Plan a road trip itinerary</strong> with stops, drive times, and packing lists</li>
+              <li><strong>Generate social media posts</strong> for a week from a single blog article</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="idea-block useful" onclick="toggleIdea(this)">
+          <div class="idea-block-header">
+            <h4>Useful ideas</h4>
+            <span class="arrow">&#x25BE;</span>
+          </div>
+          <p>Practical tasks that save real time every week. Click to explore.</p>
+          <div class="idea-list">
+            <ol>
+              <li><strong>Sort and rename</strong> hundreds of downloaded files into organized folders</li>
+              <li><strong>Audit a codebase</strong> for security vulnerabilities and generate a report</li>
+              <li><strong>Clean up a spreadsheet</strong> by fixing formatting, deduplicating, and filling gaps</li>
+              <li><strong>Monitor a log file</strong> and alert you when specific error patterns appear</li>
+              <li><strong>Generate invoices</strong> from time tracking data and client info</li>
+              <li><strong>Batch-resize images</strong> and generate optimized thumbnails for a website</li>
+              <li><strong>Summarize long PDFs</strong> into one-page briefs with key takeaways</li>
+              <li><strong>Set up scheduled backups</strong> of important directories to a second drive</li>
+              <li><strong>Convert file formats</strong> in bulk (markdown to HTML, CSV to JSON, etc.)</li>
+              <li><strong>Draft email responses</strong> to common questions using templates you define</li>
+              <li><strong>Check broken links</strong> across a documentation site and list fixes</li>
+              <li><strong>Compare two config files</strong> and highlight every difference clearly</li>
+              <li><strong>Generate changelogs</strong> from git commit history in a readable format</li>
+              <li><strong>Organize photos by date</strong> using EXIF data and rename them consistently</li>
+              <li><strong>Lint and fix formatting</strong> across an entire project in one pass</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- Trust numbers -->
@@ -643,6 +773,10 @@
       document.querySelectorAll('.plat').forEach(function(inst) {
         inst.classList.toggle('active', inst.dataset.platform === platform);
       });
+    }
+
+    function toggleIdea(el) {
+      el.classList.toggle('open');
     }
 
     function copyCommand(btn) {

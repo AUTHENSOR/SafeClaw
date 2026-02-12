@@ -384,79 +384,103 @@
       color: var(--charcoal);
     }
 
-    /* Idea blocks */
-    .idea-blocks {
+    /* Idea cards */
+    .idea-cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       max-width: 640px;
       margin: 24px auto 0;
-      align-items: start;
     }
-    .idea-block {
+    .idea-card {
       border-radius: 12px;
       padding: 20px 24px;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      user-select: none;
+      text-align: center;
     }
-    .idea-block:hover { transform: translateY(-2px); }
-    .idea-block.creative {
+    .idea-card:hover { transform: translateY(-2px); }
+    .idea-card.creative {
       background: rgba(163, 214, 223, 0.25);
       border: 1px solid rgba(130, 195, 207, 0.5);
     }
-    .idea-block.useful {
+    .idea-card.useful {
       background: rgba(185, 165, 140, 0.22);
       border: 1px solid rgba(165, 142, 115, 0.45);
     }
-    .idea-block-header {
-      display: flex;
+    .idea-card h4 { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .idea-card p { font-size: 13px; font-weight: 300; color: var(--charcoal); }
+
+    /* Modal overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(23, 30, 25, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      padding: 24px;
     }
-    .idea-block-header h4 {
-      font-weight: 600;
-      font-size: 15px;
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--white);
+      border-radius: 14px;
+      max-width: 480px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 32px;
+      box-shadow: 0 24px 48px rgba(23, 30, 25, 0.18);
+      position: relative;
+      animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .idea-block-header .arrow {
-      font-size: 18px;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
       color: var(--taupe);
+      line-height: 1;
+      padding: 4px;
     }
-    .idea-block.open .arrow { transform: rotate(180deg); }
-    .idea-block p {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--charcoal);
-      margin-top: 4px;
+    .modal-close:hover { color: var(--navy); }
+    .modal-box h3 {
+      font-family: 'Anton', sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
     }
-    .idea-list {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .idea-block.open .idea-list { max-height: 600px; }
-    .idea-list ol {
-      margin-top: 14px;
+    .modal-box ol {
       padding-left: 28px;
       list-style-type: decimal;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
-    .idea-list li {
-      font-size: 13px;
+    .modal-box li {
+      font-size: 14px;
       font-weight: 300;
       color: var(--charcoal);
-      line-height: 1.5;
+      line-height: 1.55;
     }
-    .idea-list li strong {
+    .modal-box li strong {
       font-weight: 600;
       color: var(--navy);
     }
 
     @media (max-width: 700px) {
-      .idea-blocks { grid-template-columns: 1fr; }
+      .idea-cards { grid-template-columns: 1fr; }
     }
 
     /* CTA */
@@ -665,59 +689,14 @@
         </div>
       </div>
 
-      <div class="idea-blocks">
-        <div class="idea-block creative" onclick="toggleIdea(this)">
-          <div class="idea-block-header">
-            <h4>Creative ideas</h4>
-            <span class="arrow">&#x25BE;</span>
-          </div>
-          <p>Interesting things you didn't know an agent could do. Click to explore.</p>
-          <div class="idea-list">
-            <ol>
-              <li><strong>Generate a personal website</strong> from a resume PDF</li>
-              <li><strong>Turn meeting notes</strong> into formatted action items and follow-up emails</li>
-              <li><strong>Build a quiz</strong> from any textbook chapter or article</li>
-              <li><strong>Create a mood board</strong> by organizing and renaming image collections</li>
-              <li><strong>Write bedtime stories</strong> personalized with your kid's name and interests</li>
-              <li><strong>Draft a D&amp;D campaign</strong> with NPCs, maps, and encounter tables</li>
-              <li><strong>Convert recipes</strong> between metric and imperial, and scale for any group size</li>
-              <li><strong>Compose daily journal prompts</strong> based on your goals and recent entries</li>
-              <li><strong>Generate flashcards</strong> from lecture notes or documentation</li>
-              <li><strong>Write product descriptions</strong> for an online store from a spreadsheet of items</li>
-              <li><strong>Create a reading list</strong> with summaries from a folder of saved articles</li>
-              <li><strong>Build a trivia night</strong> with themed rounds and scoring sheets</li>
-              <li><strong>Rewrite your bio</strong> in 10 different tones (professional, casual, funny, etc.)</li>
-              <li><strong>Plan a road trip itinerary</strong> with stops, drive times, and packing lists</li>
-              <li><strong>Generate social media posts</strong> for a week from a single blog article</li>
-            </ol>
-          </div>
+      <div class="idea-cards">
+        <div class="idea-card creative" onclick="openModal('modal-creative')">
+          <h4>15 creative ideas</h4>
+          <p>Things you didn't know an agent could do</p>
         </div>
-
-        <div class="idea-block useful" onclick="toggleIdea(this)">
-          <div class="idea-block-header">
-            <h4>Useful ideas</h4>
-            <span class="arrow">&#x25BE;</span>
-          </div>
-          <p>Practical tasks that save real time every week. Click to explore.</p>
-          <div class="idea-list">
-            <ol>
-              <li><strong>Sort and rename</strong> hundreds of downloaded files into organized folders</li>
-              <li><strong>Audit a codebase</strong> for security vulnerabilities and generate a report</li>
-              <li><strong>Clean up a spreadsheet</strong> by fixing formatting, deduplicating, and filling gaps</li>
-              <li><strong>Monitor a log file</strong> and alert you when specific error patterns appear</li>
-              <li><strong>Generate invoices</strong> from time tracking data and client info</li>
-              <li><strong>Batch-resize images</strong> and generate optimized thumbnails for a website</li>
-              <li><strong>Summarize long PDFs</strong> into one-page briefs with key takeaways</li>
-              <li><strong>Set up scheduled backups</strong> of important directories to a second drive</li>
-              <li><strong>Convert file formats</strong> in bulk (markdown to HTML, CSV to JSON, etc.)</li>
-              <li><strong>Draft email responses</strong> to common questions using templates you define</li>
-              <li><strong>Check broken links</strong> across a documentation site and list fixes</li>
-              <li><strong>Compare two config files</strong> and highlight every difference clearly</li>
-              <li><strong>Generate changelogs</strong> from git commit history in a readable format</li>
-              <li><strong>Organize photos by date</strong> using EXIF data and rename them consistently</li>
-              <li><strong>Lint and fix formatting</strong> across an entire project in one pass</li>
-            </ol>
-          </div>
+        <div class="idea-card useful" onclick="openModal('modal-useful')">
+          <h4>15 useful ideas</h4>
+          <p>Practical tasks that save real time every week</p>
         </div>
       </div>
 
@@ -759,6 +738,55 @@
 
   </div>
 
+  <!-- Modals -->
+  <div class="modal-overlay" id="modal-creative" onclick="closeModalBg(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('modal-creative')">&times;</button>
+      <h3>Creative ideas</h3>
+      <ol>
+        <li><strong>Generate a personal website</strong> from a resume PDF</li>
+        <li><strong>Turn meeting notes</strong> into formatted action items and follow-up emails</li>
+        <li><strong>Build a quiz</strong> from any textbook chapter or article</li>
+        <li><strong>Create a mood board</strong> by organizing and renaming image collections</li>
+        <li><strong>Write bedtime stories</strong> personalized with your kid's name and interests</li>
+        <li><strong>Draft a D&amp;D campaign</strong> with NPCs, maps, and encounter tables</li>
+        <li><strong>Convert recipes</strong> between metric and imperial, and scale for any group size</li>
+        <li><strong>Compose daily journal prompts</strong> based on your goals and recent entries</li>
+        <li><strong>Generate flashcards</strong> from lecture notes or documentation</li>
+        <li><strong>Write product descriptions</strong> for an online store from a spreadsheet of items</li>
+        <li><strong>Create a reading list</strong> with summaries from a folder of saved articles</li>
+        <li><strong>Build a trivia night</strong> with themed rounds and scoring sheets</li>
+        <li><strong>Rewrite your bio</strong> in 10 different tones (professional, casual, funny, etc.)</li>
+        <li><strong>Plan a road trip itinerary</strong> with stops, drive times, and packing lists</li>
+        <li><strong>Generate social media posts</strong> for a week from a single blog article</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-useful" onclick="closeModalBg(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('modal-useful')">&times;</button>
+      <h3>Useful ideas</h3>
+      <ol>
+        <li><strong>Sort and rename</strong> hundreds of downloaded files into organized folders</li>
+        <li><strong>Audit a codebase</strong> for security vulnerabilities and generate a report</li>
+        <li><strong>Clean up a spreadsheet</strong> by fixing formatting, deduplicating, and filling gaps</li>
+        <li><strong>Monitor a log file</strong> and alert you when specific error patterns appear</li>
+        <li><strong>Generate invoices</strong> from time tracking data and client info</li>
+        <li><strong>Batch-resize images</strong> and generate optimized thumbnails for a website</li>
+        <li><strong>Summarize long PDFs</strong> into one-page briefs with key takeaways</li>
+        <li><strong>Set up scheduled backups</strong> of important directories to a second drive</li>
+        <li><strong>Convert file formats</strong> in bulk (markdown to HTML, CSV to JSON, etc.)</li>
+        <li><strong>Draft email responses</strong> to common questions using templates you define</li>
+        <li><strong>Check broken links</strong> across a documentation site and list fixes</li>
+        <li><strong>Compare two config files</strong> and highlight every difference clearly</li>
+        <li><strong>Generate changelogs</strong> from git commit history in a readable format</li>
+        <li><strong>Organize photos by date</strong> using EXIF data and rename them consistently</li>
+        <li><strong>Lint and fix formatting</strong> across an entire project in one pass</li>
+      </ol>
+    </div>
+  </div>
+
   <script>
     (function() {
       var ua = navigator.userAgent || navigator.platform || '';
@@ -777,9 +805,24 @@
       });
     }
 
-    function toggleIdea(el) {
-      el.classList.toggle('open');
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closeModalBg(e) {
+      if (e.target === e.currentTarget) closeModal(e.target.id);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
+          closeModal(m.id);
+        });
+      }
+    });
 
     function copyCommand(btn) {
       var text = 'npx safeclaw';

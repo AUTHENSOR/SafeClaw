@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Shield shape — Luxury Minimalism: sage fill, navy stroke -->
+  <path d="M256 28L64 108v148c0 120 82 196 192 228 110-32 192-108 192-228V108z" fill="#b7c6c2" stroke="#171e19" stroke-width="10" stroke-linejoin="round"/>
+  <!-- Paw print — navy on sage -->
+  <ellipse cx="256" cy="340" rx="72" ry="56" fill="#171e19"/>
+  <circle cx="196" cy="220" r="36" fill="#171e19"/>
+  <circle cx="316" cy="220" r="36" fill="#171e19"/>
+  <circle cx="152" cy="296" r="30" fill="#171e19"/>
+  <circle cx="360" cy="296" r="30" fill="#171e19"/>
+</svg>

@@ -1,0 +1,34 @@
+{
+  "id": "safeclaw-sandbox-readonly",
+  "version": "v1",
+  "name": "SafeClaw Sandbox Readonly",
+  "defaultEffect": "deny",
+  "rules": [
+    {
+      "id": "allow-safe-read",
+      "effect": "allow",
+      "description": "Allow read-only operations",
+      "condition": {
+        "any": [
+          { "field": "action.type", "operator": "startsWith", "value": "safe.read" }
+        ]
+      }
+    },
+    {
+      "id": "require-approval-risky",
+      "effect": "require_approval",
+      "description": "Require approval for all write, network, exec, and sensitive actions",
+      "condition": {
+        "any": [
+          { "field": "action.type", "operator": "startsWith", "value": "network." },
+          { "field": "action.type", "operator": "startsWith", "value": "secrets." },
+          { "field": "action.type", "operator": "startsWith", "value": "filesystem." },
+          { "field": "action.type", "operator": "startsWith", "value": "code." },
+          { "field": "action.type", "operator": "startsWith", "value": "payments." },
+          { "field": "action.type", "operator": "startsWith", "value": "mcp." },
+          { "field": "action.type", "operator": "startsWith", "value": "agent." }
+        ]
+      }
+    }
+  ]
+}

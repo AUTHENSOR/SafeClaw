@@ -1,0 +1,7 @@
+{
+  "id": "safeclaw-strict-deny",
+  "version": "v1",
+  "name": "SafeClaw Strict Deny",
+  "defaultEffect": "deny",
+  "rules": []
+}

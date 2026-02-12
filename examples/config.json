@@ -1,0 +1,17 @@
+{
+  "activeProfile": "default",
+  "profiles": {
+    "default": {
+      "installId": "11111111-1111-1111-1111-111111111111",
+      "controlPlane": "https://authensor-control-plane.onrender.com",
+      "authToken": "",
+      "provider": {
+        "apiKeyEnv": "ANTHROPIC_API_KEY"
+      },
+      "policy": {
+        "path": "~/.safeclaw/policies/default.json",
+        "id": ""
+      }
+    }
+  }
+}

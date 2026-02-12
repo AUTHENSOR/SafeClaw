@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeClaw Approvals</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>SafeClaw</h1>
+    <p>Approvals and receipts <span id="poll-status" class="small" style="opacity:0.5">&#x25cf; live</span></p>
+    <p class="small">Tip: append <code>?controlPlane=...</code> and <code>installId=...</code> if this is hosted separately.</p>
+  </header>
+
+  <section>
+    <h2>Pending approvals</h2>
+    <div id="approvals"></div>
+  </section>
+
+  <section>
+    <h2>Recent receipts</h2>
+    <div id="receipts"></div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

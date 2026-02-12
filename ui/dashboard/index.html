@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeClaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+  <meta name="theme-color" content="#171e19" />
+</head>
+<body>
+  <!-- SVG icon sprite — hidden, referenced via <svg class="icon"><use href="#sc-xxx"/></svg> -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="sc-paw" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="17" rx="4.5" ry="3.5" fill="currentColor"/>
+      <circle cx="7.5" cy="9.5" r="2.2" fill="currentColor"/>
+      <circle cx="16.5" cy="9.5" r="2.2" fill="currentColor"/>
+      <circle cx="5" cy="14" r="1.8" fill="currentColor"/>
+      <circle cx="19" cy="14" r="1.8" fill="currentColor"/>
+    </symbol>
+    <symbol id="sc-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+    </symbol>
+    <symbol id="sc-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="15" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/>
+    </symbol>
+    <symbol id="sc-scroll" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+    </symbol>
+    <symbol id="sc-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+    </symbol>
+    <symbol id="sc-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="sc-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </symbol>
+    <symbol id="sc-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+    </symbol>
+    <symbol id="sc-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>
+    </symbol>
+    <symbol id="sc-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </symbol>
+    <symbol id="sc-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </symbol>
+    <symbol id="sc-play" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="6 3 20 12 6 21"/>
+    </symbol>
+    <symbol id="sc-stop" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="4" y="4" width="16" height="16" rx="2"/>
+    </symbol>
+    <symbol id="sc-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+    </symbol>
+    <symbol id="sc-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/>
+    </symbol>
+    <symbol id="sc-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+    </symbol>
+    <symbol id="sc-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+    </symbol>
+    <symbol id="sc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </symbol>
+    <symbol id="sc-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+    </symbol>
+    <symbol id="sc-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="sc-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </symbol>
+    <symbol id="sc-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </symbol>
+    <symbol id="sc-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+    </symbol>
+  </svg>
+
+  <!-- Status bar -->
+  <header id="status-bar">
+    <div class="status-left">
+      <svg class="icon icon-brand"><use href="#sc-paw"/></svg>
+      <h1>SafeClaw</h1>
+      <span id="status-indicator" class="status-dot"></span>
+      <span id="status-text">Loading...</span>
+    </div>
+    <div class="status-right">
+      <button class="help-btn" onclick="showHelp()" title="Show welcome guide">?</button>
+      <label class="theme-switch" title="Toggle dark mode">
+        <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+        <span class="theme-slider">
+          <svg class="icon theme-icon-moon"><use href="#sc-moon"/></svg>
+          <svg class="icon theme-icon-sun"><use href="#sc-sun"/></svg>
+        </span>
+      </label>
+      <select id="profile-select" onchange="switchProfile()" title="Switch profile"></select>
+    </div>
+  </header>
+
+  <!-- Setup wizard (shown when not configured) -->
+  <main id="wizard" class="hidden">
+    <div class="wizard-container">
+      <!-- Step 1: Welcome -->
+      <div class="wizard-step" data-step="1">
+        <div class="wizard-icon" aria-hidden="true"><svg class="icon icon-hero"><use href="#sc-paw"/></svg></div>
+        <h2>Welcome to SafeClaw</h2>
+        <p>Your AI agent with built-in safety guardrails.</p>
+        <p>Every action gets checked before it runs. Your API keys and files never leave your machine.</p>
+        <p class="muted">Let's get you set up in 4 quick steps.</p>
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">Get started</button>
+      </div>
+
+      <!-- Step 2: Choose AI provider -->
+      <div class="wizard-step hidden" data-step="2">
+        <h2>Step 1 of 4: Choose your AI provider</h2>
+        <p>Both providers use the same safety model. Your API key never leaves your machine.</p>
+        <div class="provider-cards">
+          <button class="provider-card selected" data-provider="claude" onclick="selectProvider('claude')">
+            <div class="provider-card-name">Claude</div>
+            <div class="provider-card-org">Anthropic</div>
+            <div class="provider-card-desc">Most capable, recommended for complex tasks</div>
+          </button>
+          <button class="provider-card" data-provider="openai" onclick="selectProvider('openai')">
+            <div class="provider-card-name">GPT-4o</div>
+            <div class="provider-card-org">OpenAI</div>
+            <div class="provider-card-desc">Wide ecosystem, flexible</div>
+          </button>
+        </div>
+        <div class="wizard-buttons">
+          <button class="btn btn-secondary" onclick="wizardBack()">Back</button>
+          <button class="btn btn-primary" onclick="wizardNext()">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 3: API key -->
+      <div class="wizard-step hidden" data-step="3">
+        <h2 id="key-step-title">Step 2 of 4: Anthropic API key</h2>
+        <p>This key is saved securely on your machine and never shared with anyone &mdash; not even Authensor.</p>
+        <div class="input-group">
+          <label for="input-api-key" id="key-label">API Key</label>
+          <input type="password" id="input-api-key" placeholder="sk-ant-..." autocomplete="off" />
+        </div>
+        <div id="key-help" class="wizard-help">
+          <p class="muted"><strong>How to get your key:</strong></p>
+          <ol class="muted">
+            <li>Open <a id="key-link" href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic Console</a> (sign up if you don't have an account)</li>
+            <li id="key-help-step2">Go to <strong>API Keys</strong> in the left sidebar</li>
+            <li>Click <strong>Create Key</strong>, give it any name, and copy it</li>
+            <li>Paste it above</li>
+          </ol>
+        </div>
+        <div class="wizard-buttons">
+          <button class="btn btn-secondary" onclick="wizardBack()">Back</button>
+          <button class="btn btn-primary" onclick="wizardNext()">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Authensor token -->
+      <div class="wizard-step hidden" data-step="4">
+        <h2>Step 3 of 4: Authensor token</h2>
+        <p>Authensor is the safety layer that checks every action your AI agent takes. It only sees <em>what</em> the agent wants to do (like &quot;write a file&quot;) &mdash; never your keys, passwords, or file contents.</p>
+        <div style="margin: 12px 0;">
+          <button class="btn btn-primary" id="btn-demo-token" onclick="requestDemoToken()">Get a free demo token</button>
+          <span id="demo-token-status" class="muted" style="margin-left: 8px;"></span>
+        </div>
+        <div class="input-group">
+          <label for="input-auth-token">Authensor Token</label>
+          <input type="password" id="input-auth-token" placeholder="authensor_..." autocomplete="off" />
+        </div>
+        <p class="muted">Already have a token? Paste it above. Or <a href="https://forms.gle/QdfeWAr2G4pc8GxQA" target="_blank" rel="noopener">request one manually</a>.</p>
+        <div class="wizard-buttons">
+          <button class="btn btn-secondary" onclick="wizardBack()">Back</button>
+          <button class="btn btn-primary" onclick="wizardNext()">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Completing setup -->
+      <div class="wizard-step hidden" data-step="5">
+        <div class="wizard-icon" aria-hidden="true"><svg class="icon icon-hero"><use href="#sc-loader"/></svg></div>
+        <h2>Setting up...</h2>
+        <p id="setup-status">Saving configuration and applying default policy...</p>
+      </div>
+
+      <!-- Step 6: Done -->
+      <div class="wizard-step hidden" data-step="6">
+        <div class="wizard-icon" aria-hidden="true"><svg class="icon icon-hero" style="color:var(--success)"><use href="#sc-check"/></svg></div>
+        <h2>You're all set!</h2>
+        <p>SafeClaw is configured and ready. Your default deny-by-default policy is active.</p>
+        <div id="setup-summary" class="setup-summary"></div>
+        <button class="btn btn-primary btn-lg" onclick="wizardDone()">Go to Dashboard</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dashboard (shown when configured) -->
+  <main id="dashboard" class="hidden">
+    <!-- Tab navigation -->
+    <nav class="dashboard-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="task" onclick="switchTab('task')" role="tab"><svg class="icon"><use href="#sc-target"/></svg> Tasks</button>
+      <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')" role="tab"><svg class="icon"><use href="#sc-chart"/></svg> Analytics</button>
+      <button class="tab-btn" data-tab="audit" onclick="switchTab('audit')" role="tab"><svg class="icon"><use href="#sc-scroll"/></svg> Audit Log</button>
+      <button class="tab-btn" data-tab="history" onclick="switchTab('history')" role="tab"><svg class="icon"><use href="#sc-folder"/></svg> History</button>
+      <button class="tab-btn" data-tab="schedules" onclick="switchTab('schedules')" role="tab"><svg class="icon"><use href="#sc-clock"/></svg> Schedules</button>
+      <button class="tab-btn" data-tab="policy" onclick="switchTab('policy')" role="tab"><svg class="icon"><use href="#sc-shield"/></svg> Policy</button>
+      <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')" role="tab"><svg class="icon"><use href="#sc-sliders"/></svg> Settings</button>
+      <button class="tab-btn" data-tab="clinic" onclick="switchTab('clinic')" role="tab"><svg class="icon"><use href="#sc-activity"/></svg> Claw Clinic</button>
+    </nav>
+
+    <!-- Tasks tab -->
+    <div id="tab-task" class="tab-panel">
+      <!-- Welcome banner (shown when no tasks have been run) -->
+      <div id="welcome-banner" class="welcome-banner">
+        <button class="welcome-close" onclick="dismissWelcome()" title="Dismiss"><svg class="icon"><use href="#sc-x"/></svg></button>
+        <div class="welcome-content">
+          <div class="welcome-icon"><svg class="icon icon-hero"><use href="#sc-shield-check"/></svg></div>
+          <h2>Your AI agent has a safety net</h2>
+          <p>Every action gets checked before it runs. Safe ones go. Risky ones need your OK. Dangerous ones are blocked.</p>
+          <div class="how-it-works">
+            <div class="flow-step">
+              <div class="flow-icon"><svg class="icon"><use href="#sc-edit"/></svg></div>
+              <div class="flow-label">You give a task</div>
+            </div>
+            <div class="flow-arrow"><svg class="icon"><use href="#sc-arrow"/></svg></div>
+            <div class="flow-step">
+              <div class="flow-icon"><svg class="icon"><use href="#sc-shield-check"/></svg></div>
+              <div class="flow-label">Every action checked</div>
+            </div>
+            <div class="flow-arrow"><svg class="icon"><use href="#sc-arrow"/></svg></div>
+            <div class="flow-step flow-step-outcomes">
+              <div class="flow-outcome"><span class="flow-dot dot-allow"></span> Safe &#x2014; runs</div>
+              <div class="flow-outcome"><span class="flow-dot dot-approval"></span> Risky &#x2014; you decide</div>
+              <div class="flow-outcome"><span class="flow-dot dot-deny"></span> Dangerous &#x2014; blocked</div>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: 16px; margin-bottom: 16px;">Your keys and files never leave your machine. Only action descriptions are checked.</p>
+          <div class="example-chips">
+            <button class="chip" onclick="fillExample('Summarize the files in the current directory')">Summarize files</button>
+            <button class="chip" onclick="fillExample('Search the web for the latest news about AI safety')">Web search</button>
+            <button class="chip" onclick="fillExample('Create a Python script that sorts a CSV file by the second column')">Write a script</button>
+            <button class="chip" onclick="fillExample('Read and explain the contents of README.md')">Explain a file</button>
+          </div>
+          <div class="tab-tour">
+            <h3>Your dashboard</h3>
+            <div class="tab-tour-grid">
+              <button class="tab-tour-card" onclick="switchTab('task')">
+                <svg class="icon icon-tour"><use href="#sc-target"/></svg>
+                <span class="tab-tour-name">Tasks</span>
+                <span class="tab-tour-desc">Run tasks and approve risky actions</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('analytics')">
+                <svg class="icon icon-tour"><use href="#sc-chart"/></svg>
+                <span class="tab-tour-name">Analytics</span>
+                <span class="tab-tour-desc">See what your agent has been doing</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('audit')">
+                <svg class="icon icon-tour"><use href="#sc-scroll"/></svg>
+                <span class="tab-tour-name">Audit Log</span>
+                <span class="tab-tour-desc">Every action checked, with receipts</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('history')">
+                <svg class="icon icon-tour"><use href="#sc-folder"/></svg>
+                <span class="tab-tour-name">History</span>
+                <span class="tab-tour-desc">Past tasks and their results</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('schedules')">
+                <svg class="icon icon-tour"><use href="#sc-clock"/></svg>
+                <span class="tab-tour-name">Schedules</span>
+                <span class="tab-tour-desc">Automate recurring tasks</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('policy')">
+                <svg class="icon icon-tour"><use href="#sc-shield"/></svg>
+                <span class="tab-tour-name">Policy</span>
+                <span class="tab-tour-desc">Customize what's allowed or blocked</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('settings')">
+                <svg class="icon icon-tour"><use href="#sc-sliders"/></svg>
+                <span class="tab-tour-name">Settings</span>
+                <span class="tab-tour-desc">API keys, theme, notifications</span>
+              </button>
+              <button class="tab-tour-card" onclick="switchTab('clinic')">
+                <svg class="icon icon-tour"><use href="#sc-activity"/></svg>
+                <span class="tab-tour-name">Claw Clinic</span>
+                <span class="tab-tour-desc">Diagnose connection or config issues</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel task-panel">
+          <h2><svg class="icon"><use href="#sc-rocket"/></svg> Run a task</h2>
+          <div class="task-input-area">
+            <textarea id="task-input" placeholder="What should your AI agent do? e.g. 'Summarize the files in this directory'" rows="3"></textarea>
+            <div class="task-options">
+              <div class="task-option-group">
+                <label for="task-model">Model</label>
+                <select id="task-model"></select>
+              </div>
+              <div class="task-option-group">
+                <label for="task-container">
+                  <input type="checkbox" id="task-container" onchange="toggleWorkspaceInput()" /> Sandboxed mode
+                </label>
+              </div>
+              <div id="container-info" class="container-info hidden">
+                <button class="container-info-close" onclick="dismissContainerInfo()" title="Dismiss"><svg class="icon"><use href="#sc-x"/></svg></button>
+                <div class="container-info-text">
+                  <strong>What is sandboxed mode?</strong>
+                  <p>Runs the AI agent inside an isolated container (like a virtual machine) so it can <em>only</em> access files in one folder. Nothing outside that folder can be read, changed, or deleted &mdash; even if the agent tries.</p>
+                  <p><strong>When to use it:</strong> When running untrusted tasks, working with sensitive projects, or anytime you want an extra layer of protection.</p>
+                  <p><strong>What goes in the project folder:</strong> Everything the agent needs to do its job. Source code, config files, data files &mdash; if it's not in this folder, the agent can't see it. Your home directory, SSH keys, other projects, and system files are all completely off-limits. Think of it as handing someone a locked room with only the files you choose inside.</p>
+                  <p><strong>Setup:</strong> Requires <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Docker Desktop</a> running on your machine. Install it, make sure it's open, and you're good to go.</p>
+                </div>
+                <div class="task-option-group" id="task-workspace-group">
+                  <label for="task-workspace">Project folder</label>
+                  <input type="text" id="task-workspace" placeholder="e.g. /Users/you/my-project" />
+                  <span class="input-hint">This is the <em>only</em> folder the agent can access. Everything else on your machine is invisible to it.</span>
+                </div>
+              </div>
+            </div>
+            <div class="task-actions">
+              <button id="btn-run" class="btn btn-primary btn-lg" onclick="startTask()"><svg class="icon"><use href="#sc-play"/></svg> Run</button>
+              <button id="btn-stop" class="btn btn-danger hidden" onclick="stopTask()"><svg class="icon"><use href="#sc-stop"/></svg> Stop</button>
+            </div>
+          </div>
+          <div id="task-output" class="output-area hidden">
+            <div class="output-header">
+              <span>Output</span>
+              <span id="task-status-badge" class="badge"></span>
+            </div>
+            <div id="output-content" class="output-content"></div>
+            <div id="followup-area" class="hidden">
+              <div class="followup-input-area">
+                <input type="text" id="followup-input" placeholder="Send a follow-up message..." onkeydown="if(event.key==='Enter')sendFollowUp()" />
+                <button class="btn btn-primary" onclick="sendFollowUp()">Send</button>
+              </div>
+            </div>
+          </div>
+          <div id="task-queue" class="hidden">
+            <h3>Queued Tasks <span id="queue-count" class="badge badge-count">0</span></h3>
+            <div id="queue-list"></div>
+          </div>
+        </section>
+        <aside class="panel approval-panel">
+          <h2><svg class="icon"><use href="#sc-bell"/></svg> Approvals <span id="approval-count" class="badge badge-count hidden">0</span></h2>
+          <div id="approval-list"></div>
+        </aside>
+      </div>
+      <section class="panel receipt-panel">
+        <h2><svg class="icon"><use href="#sc-list"/></svg> Recent receipts</h2>
+        <div id="receipt-list"></div>
+      </section>
+    </div>
+
+    <!-- Audit Log tab -->
+    <div id="tab-audit" class="tab-panel hidden">
+      <section class="panel">
+        <h2><svg class="icon"><use href="#sc-scroll"/></svg> Audit Log</h2>
+        <p class="panel-desc">Every action SafeClaw evaluates is permanently recorded here and cannot be altered after the fact.</p>
+        <div class="audit-filters">
+          <select id="audit-filter-type" onchange="refreshAudit()">
+            <option value="">All action types</option>
+            <option value="filesystem.write">File writes</option>
+            <option value="code.exec">Code execution</option>
+            <option value="network.http">Network requests</option>
+            <option value="safe.read">Safe reads</option>
+            <option value="mcp.">Plugin actions</option>
+          </select>
+          <select id="audit-filter-outcome" onchange="refreshAudit()">
+            <option value="">All outcomes</option>
+            <option value="allow">Allowed</option>
+            <option value="deny">Denied</option>
+            <option value="require_approval">Required approval</option>
+          </select>
+          <button class="btn btn-secondary" onclick="refreshAudit()">Refresh</button>
+          <button class="btn btn-secondary" onclick="verifyAuditChain()">Verify Integrity</button>
+        </div>
+        <div id="audit-verify-banner" class="hidden"></div>
+        <div id="audit-list"></div>
+      </section>
+    </div>
+
+    <!-- Analytics tab -->
+    <div id="tab-analytics" class="tab-panel hidden">
+      <section class="panel">
+        <div class="analytics-header">
+          <h2><svg class="icon"><use href="#sc-chart"/></svg> Analytics</h2>
+          <div class="analytics-controls">
+            <select id="analytics-period" onchange="refreshAnalyticsCost()">
+              <option value="day">Daily</option>
+              <option value="week">Weekly</option>
+              <option value="month">Monthly</option>
+            </select>
+            <button class="btn btn-secondary" onclick="exportAuditLog('csv')">Export CSV</button>
+            <button class="btn btn-secondary" onclick="exportAuditLog('json')">Export JSON</button>
+          </div>
+        </div>
+        <div id="analytics-budget" class="budget-bar-section"></div>
+        <div id="analytics-cost-cards" class="analytics-cards"></div>
+        <div id="analytics-cost-bars" class="bar-chart"></div>
+        <h3 style="margin: 20px 0 10px;">Approval Metrics</h3>
+        <div id="analytics-approvals"></div>
+        <h3 style="margin: 20px 0 10px;">Tool Usage</h3>
+        <div id="analytics-tools"></div>
+        <h3 style="margin: 20px 0 10px;">Plugin Usage</h3>
+        <div id="analytics-mcp"></div>
+      </section>
+    </div>
+
+    <!-- History tab -->
+    <div id="tab-history" class="tab-panel hidden">
+      <div class="history-layout">
+        <aside class="panel history-sidebar">
+          <h2><svg class="icon"><use href="#sc-folder"/></svg> Past Tasks</h2>
+          <div id="history-list"></div>
+        </aside>
+        <section class="panel history-detail">
+          <h2>Task Detail</h2>
+          <div id="history-detail-content">
+            <div class="empty-state">
+              <div class="empty-icon"><svg class="icon icon-empty"><use href="#sc-folder"/></svg></div>
+              <div>Select a task from the left to view its conversation and details.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Schedules tab -->
+    <div id="tab-schedules" class="tab-panel hidden">
+      <section class="panel">
+        <div class="schedule-header">
+          <div>
+            <h2><svg class="icon"><use href="#sc-clock"/></svg> Scheduled Tasks</h2>
+            <p class="panel-desc">Automate recurring tasks on a cron schedule with optional quiet hours.</p>
+          </div>
+          <button class="btn btn-primary" onclick="toggleScheduleForm()">+ Add Schedule</button>
+        </div>
+        <div id="schedule-form" class="hidden" style="margin-bottom: 20px;">
+          <div class="rule-form">
+            <div class="input-group">
+              <label for="sched-task">Task</label>
+              <input type="text" id="sched-task" placeholder="Describe the recurring task..." />
+            </div>
+            <div class="input-group">
+              <label for="sched-frequency">How often?</label>
+              <select id="sched-frequency" onchange="updateCronFromFrequency()">
+                <option value="">Choose a schedule...</option>
+                <option value="*/30 * * * *">Every 30 minutes</option>
+                <option value="0 * * * *">Every hour</option>
+                <option value="0 */3 * * *">Every 3 hours</option>
+                <option value="0 */6 * * *">Every 6 hours</option>
+                <option value="0 */12 * * *">Every 12 hours</option>
+                <option value="0 9 * * *">Daily at 9:00 AM</option>
+                <option value="0 0 * * *">Daily at midnight</option>
+                <option value="0 9 * * 1-5">Weekdays at 9:00 AM</option>
+                <option value="0 0 * * 0">Weekly (Sundays at midnight)</option>
+                <option value="custom">Custom (advanced)...</option>
+              </select>
+            </div>
+            <div id="sched-custom-cron" class="input-group hidden">
+              <label for="sched-cron">Custom cron expression</label>
+              <input type="text" id="sched-cron" placeholder="min hour day month weekday" style="font-family: monospace;" />
+              <span class="input-hint">Format: minute(0-59) hour(0-23) day(1-31) month(1-12) weekday(0-6, 0=Sun)</span>
+            </div>
+            <div class="input-group" style="display:flex; gap:16px;">
+              <div>
+                <label for="sched-quiet-start">Quiet Hours Start</label>
+                <input type="number" id="sched-quiet-start" min="0" max="23" placeholder="23" style="width:80px;" />
+              </div>
+              <div>
+                <label for="sched-quiet-end">Quiet Hours End</label>
+                <input type="number" id="sched-quiet-end" min="0" max="23" placeholder="7" style="width:80px;" />
+              </div>
+            </div>
+            <div class="input-group">
+              <label><input type="checkbox" id="sched-container" /> Sandboxed mode (isolated container)</label>
+            </div>
+            <button class="btn btn-primary" onclick="addSchedule()">Save Schedule</button>
+            <button class="btn btn-secondary" onclick="toggleScheduleForm()">Cancel</button>
+          </div>
+        </div>
+        <div id="schedule-list">
+          <div class="empty-state">
+            <div class="empty-icon"><svg class="icon icon-empty"><use href="#sc-clock"/></svg></div>
+            <div>No scheduled tasks yet. Click <strong>Add Schedule</strong> to automate recurring tasks.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Policy tab -->
+    <div id="tab-policy" class="tab-panel hidden">
+      <section class="panel">
+        <div class="policy-header">
+          <div>
+            <h2><svg class="icon"><use href="#sc-shield"/></svg> Policy Editor</h2>
+            <p class="panel-desc">Control what your AI agent can and cannot do. Rules are evaluated top-to-bottom.</p>
+          </div>
+          <div class="policy-actions">
+            <select id="policy-template-select">
+              <option value="">Load template...</option>
+            </select>
+            <button class="btn btn-primary" onclick="applyPolicyToControlPlane()">Save &amp; Activate Policy</button>
+          </div>
+        </div>
+        <div class="policy-info">
+          <span id="policy-name"></span>
+          <span class="badge" id="policy-default-effect"></span>
+        </div>
+        <div id="policy-rules-list"></div>
+        <div class="policy-add-rule">
+          <h3>Add Rule</h3>
+          <div class="rule-form">
+            <div class="input-group">
+              <label for="rule-description">Description</label>
+              <input type="text" id="rule-description" placeholder="What this rule does..." />
+            </div>
+            <div class="input-group">
+              <label for="rule-effect">Effect</label>
+              <select id="rule-effect">
+                <option value="allow">Allow</option>
+                <option value="deny">Deny</option>
+                <option value="require_approval">Require Approval</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="rule-action-preset">What kind of action?</label>
+              <select id="rule-action-preset" onchange="fillActionPreset()">
+                <option value="">Choose a category...</option>
+                <option value="filesystem.write">File writes</option>
+                <option value="filesystem.read">File reads</option>
+                <option value="code.exec">Code execution</option>
+                <option value="network.http">Network requests</option>
+                <option value="bash.execute">Shell commands</option>
+                <option value="mcp.">Plugin actions (all)</option>
+                <option value="custom">Custom (advanced)...</option>
+              </select>
+            </div>
+            <div id="rule-custom-fields" class="hidden">
+              <div class="input-group">
+                <label for="rule-mcp-server">Plugin / MCP Server (optional)</label>
+                <select id="rule-mcp-server" onchange="fillMcpPattern()">
+                  <option value="">None</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label for="rule-action-pattern">Action type pattern</label>
+                <input type="text" id="rule-action-pattern" placeholder="e.g. filesystem.write" />
+              </div>
+              <div class="input-group">
+                <label for="rule-operator">Match type</label>
+                <select id="rule-operator">
+                  <option value="startsWith">starts with</option>
+                  <option value="eq">exact match</option>
+                  <option value="contains">contains</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="addPolicyRule()">Add Rule</button>
+          </div>
+        </div>
+        <div class="policy-simulate">
+          <h3>Test Your Policy</h3>
+          <p class="panel-desc">See what would happen if your agent tried a specific action. Nothing actually runs.</p>
+          <div class="rule-form">
+            <div class="input-group">
+              <label for="sim-action-type">What action?</label>
+              <select id="sim-action-preset" onchange="fillSimPreset()">
+                <option value="">Pick an example...</option>
+                <option value="filesystem.write">Write a file</option>
+                <option value="filesystem.read">Read a file</option>
+                <option value="code.exec">Run code</option>
+                <option value="network.http">Make a network request</option>
+                <option value="bash.execute">Run a shell command</option>
+                <option value="custom">Type your own...</option>
+              </select>
+              <input type="text" id="sim-action-type" class="hidden" placeholder="e.g. filesystem.write" style="margin-top: 8px;" />
+            </div>
+            <div class="input-group">
+              <label for="sim-resource">On what? (file path, URL, etc.)</label>
+              <input type="text" id="sim-resource" placeholder="e.g. /etc/passwd, https://example.com" />
+            </div>
+            <button class="btn btn-secondary" onclick="simulatePolicy()">Test</button>
+          </div>
+          <div id="sim-result" class="hidden"></div>
+        </div>
+        <div class="policy-versions">
+          <h3>Policy Versions</h3>
+          <p class="panel-desc">Policy changes are automatically versioned. Roll back to any previous version.</p>
+          <div id="policy-version-list"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Settings tab -->
+    <div id="tab-settings" class="tab-panel hidden">
+      <section class="panel">
+        <h2><svg class="icon"><use href="#sc-sliders"/></svg> Settings</h2>
+        <div class="settings-form">
+          <h3 style="margin-top: 0; border-top: none; padding-top: 0;">Configuration</h3>
+          <div class="input-group">
+            <label for="set-provider">AI Provider</label>
+            <select id="set-provider" onchange="onProviderChange()">
+              <option value="claude">Claude (Anthropic)</option>
+              <option value="openai">OpenAI (GPT-4o)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="set-api-key">API Key <span id="config-key-status" class="config-status"></span></label>
+            <input type="password" id="set-api-key" placeholder="sk-ant-..." autocomplete="off" />
+          </div>
+          <div class="input-group">
+            <label for="set-auth-token">Authensor Token <span id="config-token-status" class="config-status"></span></label>
+            <input type="password" id="set-auth-token" placeholder="authensor_..." autocomplete="off" />
+          </div>
+          <button class="btn btn-primary" onclick="saveConfigForm()">Save Configuration</button>
+          <span id="config-save-status" class="muted"></span>
+
+          <h3>General</h3>
+          <div class="input-group">
+            <label for="set-timeout">Approval Timeout (minutes)</label>
+            <input type="number" id="set-timeout" min="1" max="60" />
+          </div>
+          <div class="input-group">
+            <label for="set-retention">Audit Retention (days)</label>
+            <input type="number" id="set-retention" min="1" max="365" />
+          </div>
+          <div class="input-group">
+            <label for="set-cost-tracking">
+              <input type="checkbox" id="set-cost-tracking" /> Enable cost tracking
+            </label>
+          </div>
+          <div class="input-group">
+            <label for="set-offline-cache">
+              <input type="checkbox" id="set-offline-cache" /> Remember approved actions when offline
+            </label>
+          </div>
+          <div class="input-group">
+            <label for="set-cache-ttl">Offline memory duration (minutes)</label>
+            <input type="number" id="set-cache-ttl" min="1" max="1440" />
+          </div>
+          <div class="input-group">
+            <label for="set-theme">Theme</label>
+            <select id="set-theme">
+              <option value="auto">Auto (system)</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label><input type="checkbox" id="set-notifications" onchange="toggleNotifications()" /> Enable browser notifications</label>
+          </div>
+          <h3>Cost Budget</h3>
+          <div class="input-group">
+            <label for="set-budget-enabled">
+              <input type="checkbox" id="set-budget-enabled" /> Enable budget limit
+            </label>
+          </div>
+          <div class="input-group">
+            <label for="set-budget-limit">Budget Limit (USD)</label>
+            <input type="number" id="set-budget-limit" min="0.01" max="10000" step="0.01" />
+          </div>
+          <div class="input-group">
+            <label for="set-budget-period">Budget Period</label>
+            <select id="set-budget-period">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="set-budget-action">Over-budget Action</label>
+            <select id="set-budget-action">
+              <option value="warn">Warn (allow tasks)</option>
+              <option value="require_approval">Require approval</option>
+              <option value="block">Block new tasks</option>
+            </select>
+          </div>
+          <h3>Webhook Notifications</h3>
+          <div class="input-group">
+            <label for="set-webhook-url">Webhook URL</label>
+            <input type="url" id="set-webhook-url" placeholder="https://hooks.slack.com/..." />
+          </div>
+          <div class="input-group">
+            <label>Events</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" value="approval_required" class="webhook-event" /> Approval needed</label>
+              <label><input type="checkbox" value="approval_resolved" class="webhook-event" /> Approval resolved</label>
+              <label><input type="checkbox" value="task_completed" class="webhook-event" /> Task completed</label>
+              <label><input type="checkbox" value="task_failed" class="webhook-event" /> Task failed</label>
+              <label><input type="checkbox" value="budget_warning" class="webhook-event" /> Budget warning</label>
+              <label><input type="checkbox" value="budget_exceeded" class="webhook-event" /> Budget exceeded</label>
+            </div>
+          </div>
+          <h3>SMS Notifications (Twilio)</h3>
+          <div id="sms-status-line" class="muted" style="margin-bottom: 12px;"></div>
+          <div class="input-group">
+            <label for="set-twilio-sid">Twilio Account SID</label>
+            <input type="text" id="set-twilio-sid" placeholder="AC..." autocomplete="off" />
+          </div>
+          <div class="input-group">
+            <label for="set-twilio-token">Twilio Auth Token</label>
+            <input type="password" id="set-twilio-token" placeholder="Twilio auth token" autocomplete="off" />
+          </div>
+          <div class="input-group">
+            <label for="set-twilio-from">Twilio From Number</label>
+            <input type="tel" id="set-twilio-from" placeholder="+1..." autocomplete="off" />
+          </div>
+          <div class="input-group">
+            <label for="set-notify-phone">Notify Phone Number</label>
+            <input type="tel" id="set-notify-phone" placeholder="+1..." autocomplete="off" />
+          </div>
+          <button class="btn btn-primary" onclick="saveSmsForm()">Save SMS Config</button>
+          <span id="sms-save-status" class="muted"></span>
+
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);"></div>
+          <button class="btn btn-primary" onclick="saveSettingsForm()">Save Settings</button>
+          <span id="settings-save-status" class="muted"></span>
+
+          <h3 style="margin-top: 24px;">Backup &amp; Restore</h3>
+          <div class="backup-actions">
+            <button class="btn btn-secondary" onclick="exportConfig()">Export Configuration</button>
+            <label class="btn btn-secondary" style="cursor: pointer;">
+              Import Configuration
+              <input type="file" id="import-config-file" accept=".json" onchange="importConfig()" style="display:none" />
+            </label>
+            <span id="backup-status" class="muted"></span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Claw Clinic tab -->
+    <div id="tab-clinic" class="tab-panel hidden">
+      <section class="panel">
+        <div class="clinic-header">
+          <div>
+            <h2><svg class="icon"><use href="#sc-activity"/></svg> Claw Clinic</h2>
+            <p class="panel-desc">Run a quick health check to make sure everything is working properly.</p>
+          </div>
+          <button class="btn btn-primary" onclick="refreshClinic()">Run Check-up</button>
+        </div>
+        <div id="clinic-summary" class="clinic-summary hidden"></div>
+        <div id="clinic-results">
+          <div class="empty-state">
+            <div class="empty-icon"><svg class="icon icon-empty"><use href="#sc-activity"/></svg></div>
+            <div>Click <strong>Run Check-up</strong> to diagnose your SafeClaw setup</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="dashboard-footer">
+    <span class="footer-brand"><svg class="icon" style="width:14px;height:14px"><use href="#sc-paw"/></svg> SafeClaw v1.0.0-beta</span> &middot; Powered by <a href="https://authensor.com" target="_blank" rel="noopener">Authensor</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

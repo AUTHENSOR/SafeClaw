@@ -1,0 +1,18 @@
+{
+  "id": "safeclaw-allowlist",
+  "version": "v1",
+  "name": "SafeClaw Allowlist Example",
+  "defaultEffect": "deny",
+  "rules": [
+    {
+      "id": "allow-domain",
+      "effect": "allow",
+      "condition": {
+        "all": [
+          { "field": "action.type", "operator": "eq", "value": "network.http" },
+          { "field": "action.resource", "operator": "startsWith", "value": "https://docs.safeclaw.ai" }
+        ]
+      }
+    }
+  ]
+}

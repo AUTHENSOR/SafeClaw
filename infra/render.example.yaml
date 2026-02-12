@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: safeclaw-server
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: node server/dist/server.js
+    envVars:
+      - key: SAFECLAW_MODE
+        value: production
+      - key: AUTHENSOR_CONTROL_PLANE_URL
+        value: https://authensor-control-plane.onrender.com

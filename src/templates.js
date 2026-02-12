@@ -1,0 +1,51 @@
+export const defaultPolicyTemplate = {
+  id: 'safeclaw-default',
+  version: 'v1',
+  name: 'SafeClaw Default Policy',
+  defaultEffect: 'deny',
+  rules: [
+    {
+      id: 'allow-safe-readonly',
+      effect: 'allow',
+      description: 'Allow read-only operations (file reads, search, grep)',
+      condition: {
+        any: [
+          { field: 'action.type', operator: 'startsWith', value: 'safe.read' }
+        ]
+      }
+    },
+    {
+      id: 'require-approval-writes',
+      effect: 'require_approval',
+      description: 'Require approval for file writes and code execution',
+      condition: {
+        any: [
+          { field: 'action.type', operator: 'startsWith', value: 'filesystem.' },
+          { field: 'action.type', operator: 'startsWith', value: 'code.' }
+        ]
+      }
+    },
+    {
+      id: 'require-approval-network',
+      effect: 'require_approval',
+      description: 'Require approval for network requests',
+      condition: {
+        any: [
+          { field: 'action.type', operator: 'startsWith', value: 'network.' }
+        ]
+      }
+    },
+    {
+      id: 'require-approval-sensitive',
+      effect: 'require_approval',
+      description: 'Require approval for secrets, payments, and MCP tools',
+      condition: {
+        any: [
+          { field: 'action.type', operator: 'startsWith', value: 'secrets.' },
+          { field: 'action.type', operator: 'startsWith', value: 'payments.' },
+          { field: 'action.type', operator: 'startsWith', value: 'mcp.' }
+        ]
+      }
+    }
+  ]
+};

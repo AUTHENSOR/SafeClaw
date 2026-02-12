@@ -1,0 +1,7 @@
+node_modules
+.git
+ui
+docs
+examples
+infra
+*.md

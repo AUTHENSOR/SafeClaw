@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.env
+.safeclaw/
+.DS_Store
+coverage/

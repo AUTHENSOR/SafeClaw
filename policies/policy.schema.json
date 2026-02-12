@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["id", "version", "defaultEffect", "rules"],
+  "properties": {
+    "id": { "type": "string" },
+    "version": { "type": "string" },
+    "name": { "type": "string" },
+    "defaultEffect": { "type": "string", "enum": ["allow", "deny", "require_approval"] },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/rule" }
+    }
+  },
+  "definitions": {
+    "rule": {
+      "type": "object",
+      "required": ["id", "effect", "condition"],
+      "properties": {
+        "id": { "type": "string" },
+        "effect": { "type": "string", "enum": ["allow", "deny", "require_approval"] },
+        "description": { "type": "string" },
+        "condition": { "$ref": "#/definitions/condition" }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/predicate" }
+        },
+        "any": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/predicate" }
+        }
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "required": ["field", "operator", "value"],
+      "properties": {
+        "field": { "type": "string" },
+        "operator": {
+          "type": "string",
+          "enum": ["eq", "in", "startsWith", "contains", "matches"]
+        },
+        "value": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" },
+            { "type": "array" }
+          ]
+        }
+      }
+    }
+  }
+}

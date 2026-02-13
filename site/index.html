@@ -503,7 +503,7 @@
       margin-bottom: 20px;
     }
     .final-cta .command-box {
-      max-width: 320px;
+      max-width: 400px;
       margin: 0 auto;
     }
     .star-link {
@@ -599,7 +599,7 @@
           <h3>Paste &amp; run</h3>
           <p>Copy this, paste into Terminal, hit Enter:</p>
           <div class="command-box">
-            <code><span class="prefix">$ </span>npx safeclaw</code>
+            <code><span class="prefix">$ </span>npx @authensor/safeclaw</code>
             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
           </div>
           <div class="result-note">Your browser opens automatically with a setup wizard.</div>
@@ -743,7 +743,7 @@
       <h2>Ready to try it?</h2>
       <p>One command. Your browser opens. The wizard walks you through everything.</p>
       <div class="command-box">
-        <code><span class="prefix">$ </span>npx safeclaw</code>
+        <code><span class="prefix">$ </span>npx @authensor/safeclaw</code>
         <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
       </div>
       <a class="star-link" href="https://github.com/JKEARN/SafeClaw" target="_blank" rel="noopener">
@@ -845,7 +845,7 @@
     });
 
     function copyCommand(btn) {
-      var text = 'npx safeclaw';
+      var text = 'npx @authensor/safeclaw';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function() {
           btn.textContent = 'Copied!';

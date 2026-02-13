@@ -22,8 +22,11 @@ import { checkBudget } from './budget.js';
 import { getSchedules, addSchedule, removeSchedule, updateSchedule, isQuietHours, nextCronRun, parseCron } from './scheduler.js';
 import { logger } from './logger.js';
 import { redactSecrets } from './validate.js';
+import { createRequire } from 'module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const { version: PKG_VERSION } = require('../package.json');
 
 // --- Error classification ---
 
@@ -345,7 +348,7 @@ function handleStatus(req, res) {
 async function handleHealth(req, res) {
   const result = {
     ok: true,
-    version: '1.0.0-beta',
+    version: PKG_VERSION,
     uptime: Math.floor(process.uptime()),
     schedulerRunning: !!schedulerInterval,
     authensorReachable: false,
@@ -545,9 +548,13 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
   // Choose runner: container mode or direct agent
   let agentPromise;
   if (container) {
-    agentPromise = import('./container.js').then(m =>
-      m.runContainerAgent({ task, profile: taskProfile, verbose: false, emitter: eventBus, taskId, workspace: workspace || process.cwd() })
-    );
+    agentPromise = import('./container.js').then(m => {
+      const runtime = m.detectRuntime();
+      if (!runtime) throw new Error('No container runtime found. Install Docker or Podman.');
+      const projectRoot = path.resolve(__dirname, '..');
+      m.buildImage({ runtime, projectRoot });
+      return m.runContainer({ runtime, task, profile: taskProfile, workspacePath: workspace || process.cwd(), verbose: false });
+    });
   } else {
     agentPromise = runAgent({ task, profile: taskProfile, verbose: false, emitter: eventBus, taskId });
   }
@@ -1241,7 +1248,7 @@ function handleExportConfig(req, res) {
     }
 
     const backup = {
-      version: '1.0.0-beta',
+      version: PKG_VERSION,
       exportedAt: new Date().toISOString(),
       config: safeCfg,
       settings,
@@ -1481,6 +1488,7 @@ export async function startServer({ open = true } = {}) {
   const shutdown = () => {
     logger.info('Shutting down gracefully...');
     stopSchedulerTick();
+    if (activeTask?.abortController) activeTask.abortController.abort();
     for (const conn of sseConnections) {
       try { conn.end(); } catch {}
     }

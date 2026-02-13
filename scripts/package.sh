@@ -6,7 +6,7 @@
 
 set -e
 
-VERSION="1.0.0-beta"
+VERSION="1.0.0-beta.2"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DIST_DIR="$PROJECT_DIR/dist"
 STAGING="$DIST_DIR/SafeClaw"

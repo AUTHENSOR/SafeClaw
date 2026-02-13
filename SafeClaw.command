@@ -10,7 +10,7 @@ cd "$(dirname "$0")" || exit 1
 clear
 echo ""
 echo "  ┌─────────────────────────────────────┐"
-echo "  │        🐾  SafeClaw v1.0.0-beta     │"
+echo "  │        🐾  SafeClaw v1.0.0-beta.2     │"
 echo "  │     Safe-by-default AI agent gate   │"
 echo "  └─────────────────────────────────────┘"
 echo ""
@@ -20,7 +20,7 @@ echo ""
 if ! command -v node &>/dev/null; then
   echo "  ⚠  Node.js is not installed."
   echo ""
-  echo "  SafeClaw needs Node.js (v18+) to run."
+  echo "  SafeClaw needs Node.js (v20+) to run."
   echo "  Opening the Node.js download page for you..."
   echo ""
   open "https://nodejs.org/en/download"
@@ -32,8 +32,8 @@ if ! command -v node &>/dev/null; then
 fi
 
 NODE_VERSION=$(node -v | sed 's/v//' | cut -d. -f1)
-if [ "$NODE_VERSION" -lt 18 ] 2>/dev/null; then
-  echo "  ⚠  Node.js v${NODE_VERSION} is too old. SafeClaw needs v18+."
+if [ "$NODE_VERSION" -lt 20 ] 2>/dev/null; then
+  echo "  ⚠  Node.js v${NODE_VERSION} is too old. SafeClaw needs v20+."
   echo "  Opening the Node.js download page..."
   open "https://nodejs.org/en/download"
   echo ""

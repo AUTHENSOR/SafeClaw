@@ -8,7 +8,7 @@ cd /d "%~dp0"
 
 echo.
 echo   ┌─────────────────────────────────────┐
-echo   │        SafeClaw v1.0.0-beta         │
+echo   │        SafeClaw v1.0.0-beta.2         │
 echo   │     Safe-by-default AI agent gate   │
 echo   └─────────────────────────────────────┘
 echo.
@@ -19,7 +19,7 @@ where node >nul 2>&1
 if %ERRORLEVEL% neq 0 (
     echo   [!] Node.js is not installed.
     echo.
-    echo   SafeClaw needs Node.js v18+ to run.
+    echo   SafeClaw needs Node.js v20+ to run.
     echo   Opening the Node.js download page for you...
     echo.
     start https://nodejs.org/en/download
@@ -32,8 +32,8 @@ if %ERRORLEVEL% neq 0 (
 for /f "tokens=1 delims=v." %%a in ('node -v') do set NODE_MAJOR=%%a
 REM node -v outputs "v20.11.0" — extract major version
 for /f "tokens=2 delims=v." %%a in ('node -v') do set NODE_MAJOR=%%a
-if %NODE_MAJOR% LSS 18 (
-    echo   [!] Node.js is too old. SafeClaw needs v18+.
+if %NODE_MAJOR% LSS 20 (
+    echo   [!] Node.js is too old. SafeClaw needs v20+.
     echo   Opening the Node.js download page...
     start https://nodejs.org/en/download
     echo.

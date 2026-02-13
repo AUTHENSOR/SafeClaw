@@ -182,7 +182,7 @@ describe('Integration: API endpoints', () => {
   it('GET /api/health returns version and uptime', async () => {
     const res = await request(port, 'GET', '/api/health');
     expect(res.status).toBe(200);
-    expect(res.json.version).toBe('1.0.0-beta');
+    expect(res.json.version).toBe('1.0.0-beta.2');
     expect(typeof res.json.uptime).toBe('number');
     expect(res.json).toHaveProperty('schedulerRunning');
     expect(res.json).toHaveProperty('auditIntegrity');

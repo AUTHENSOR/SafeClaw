@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createRequire } from 'module';
 import { loadConfig, saveConfig, ensureProfile, getProfile, setActiveProfile } from './config.js';
 import { ensurePolicyFile, loadPolicy, policyHelp, simulatePolicy } from './policy.js';
 import { AuthensorClient } from './authensor.js';
@@ -9,6 +10,9 @@ import { readEntries } from './audit.js';
 import { listSessions, loadSession } from './session.js';
 import { createWorkspaceConfig, detectWorkspace } from './workspace.js';
 import { checkBudget } from './budget.js';
+
+const require = createRequire(import.meta.url);
+const { version: PKG_VERSION } = require('../package.json');
 
 function argValue(args, key) {
   const idx = args.indexOf(key);
@@ -97,7 +101,7 @@ async function main() {
   }
 
   if (cmd === '--version') {
-    console.log('safeclaw 1.0.0-beta');
+    console.log(`safeclaw ${PKG_VERSION}`);
     return;
   }
 

@@ -24,6 +24,12 @@ If your key is in a different environment variable:
 safeclaw init --api-key-env MY_CLAUDE_KEY
 ```
 
-## Multi-provider support (planned)
+## Multi-provider support
 
-Future phases will support additional providers (OpenAI, etc.) via a custom agent loop. The gateway and classifier modules are provider-agnostic -they work with any tool call regardless of which model generated it.
+SafeClaw supports both Claude (via the Agent SDK) and OpenAI (via a custom agent loop). Set the provider during setup:
+
+```bash
+safeclaw init --provider openai --api-key-env OPENAI_API_KEY
+```
+
+The gateway and classifier modules are provider-agnostic — they gate every tool call regardless of which model generated it.

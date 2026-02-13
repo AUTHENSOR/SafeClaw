@@ -8,7 +8,7 @@ import { execSync } from 'child_process';
 import { createGatewayHook } from './gateway.js';
 import { isRetryable, getBackoffMs, sleep } from './authensor.js';
 import { detectWorkspace } from './workspace.js';
-import { safeRegex } from './validate.js';
+import { safeRegex, redactSecrets } from './validate.js';
 import { estimateOpenAICost } from './budget.js';
 
 const MAX_TURNS = 50;
@@ -455,7 +455,7 @@ export async function runOpenAIAgent({ task, profile, verbose = false, emitter =
         if (delta?.content) {
           contentText += delta.content;
           process.stdout.write(delta.content);
-          emit('agent:text', { text: delta.content });
+          emit('agent:text', { text: redactSecrets(delta.content) });
         }
 
         // Accumulate tool calls

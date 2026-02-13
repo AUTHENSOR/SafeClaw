@@ -1,4 +1,4 @@
-const CACHE = 'safeclaw-v1.0.0-beta.12';
+const CACHE = 'safeclaw-v1.0.0-beta.2';
 const SHELL = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/icon.svg'];
 
 self.addEventListener('install', function(e) {

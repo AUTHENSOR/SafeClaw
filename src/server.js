@@ -564,11 +564,11 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
       session.finishedAt = new Date().toISOString();
       session.status = 'success';
       try { saveSession(session); } catch {}
-      sendWebhook('task_completed', { task, taskId, cost: session.cost }).catch(() => {});
+      sendWebhook('task_completed', { task, taskId, cost: session.cost }).catch((e) => { console.error('[webhook] task_completed failed:', e.message); });
       try {
         const postBudget = checkBudget();
         if (postBudget.exceeded) {
-          sendWebhook('budget_exceeded', { currentUsd: postBudget.currentUsd, limitUsd: postBudget.limitUsd }).catch(() => {});
+          sendWebhook('budget_exceeded', { currentUsd: postBudget.currentUsd, limitUsd: postBudget.limitUsd }).catch((e) => { console.error('[webhook] budget_exceeded failed:', e.message); });
         }
       } catch {}
       eventBus.removeListener(`task:${taskId}`, sessionListener);
@@ -580,7 +580,7 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
       session.status = 'error';
       session.error = err?.message || 'Unknown error';
       try { saveSession(session); } catch {}
-      sendWebhook('task_failed', { task, taskId, error: session.error }).catch(() => {});
+      sendWebhook('task_failed', { task, taskId, error: session.error }).catch((e) => { console.error('[webhook] task_failed failed:', e.message); });
       eventBus.removeListener(`task:${taskId}`, sessionListener);
       if (activeTask?.id === taskId) activeTask = null;
       processQueue();
@@ -714,7 +714,9 @@ function handleGlobalSSE(req, res) {
   if (sseConnections) sseConnections.add(res);
 
   const listener = (event) => {
-    res.write(`event: ${event.type}\ndata: ${JSON.stringify(event.data || {})}\n\n`);
+    const data = event.data ? { ...event.data } : {};
+    if (data.text) data.text = redactSecrets(data.text);
+    res.write(`event: ${event.type}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 
   eventBus.on('global', listener);

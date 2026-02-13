@@ -1,24 +1,29 @@
 # Thin UI
 
-The UI is intentionally minimal: approvals and receipts only. It does not handle provider keys or run tasks.
+SafeClaw includes a standalone approvals UI at `ui/approvals/`. This is a minimal single-page app for reviewing and resolving pending approvals, separate from the full dashboard.
 
 ## Access
-If hosted on the same domain as the server:
+
+The thin UI is served by the SafeClaw dashboard server:
+
 ```
-https://safeclaw.yourdomain.com/ui
+http://localhost:7702/approvals/
 ```
 
-If hosted separately, pass query params:
+To point it at a different control plane or install ID, pass query params:
+
 ```
-https://ui.yourdomain.com/?server=https://safeclaw.yourdomain.com&installId=YOUR_INSTALL_ID
+http://localhost:7702/approvals/?controlPlane=https://authensor-api-production.up.railway.app&installId=YOUR_INSTALL_ID
 ```
 
 ## Endpoints used
-- GET /approvals?status=pending&installId=...
-- POST /approvals/:id/approve
-- POST /approvals/:id/reject
-- GET /receipts?limit=20&installId=...
+
+- `GET /api/approvals` -- list pending approvals
+- `POST /api/approvals/:id/approve` -- approve a request
+- `POST /api/approvals/:id/reject` -- reject a request
+- `GET /api/receipts` -- list recent receipts
 
 ## Security notes
-- The UI should be hosted behind auth if you are using server auth tokens.
-- For public demos, keep installIds scoped and rate limited.
+
+- The dashboard runs on localhost and is not exposed to the network by default.
+- For remote access, place behind authentication (e.g., SSH tunnel, VPN, or reverse proxy with auth).

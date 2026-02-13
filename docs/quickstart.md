@@ -3,51 +3,57 @@
 ## Prerequisites
 
 - Node.js 20+
-- An Anthropic API key (`ANTHROPIC_API_KEY`)
-- An Authensor demo token (get one at https://forms.gle/QdfeWAr2G4pc8GxQA)
+- An API key (Anthropic or OpenAI)
 
-## 1. Install
+## 1. Install and launch
+
+```bash
+npx @authensor/safeclaw
+```
+
+Your browser opens with a setup wizard that walks you through everything.
+
+**Alternative: clone and run**
 
 ```bash
 git clone https://github.com/AUTHENSOR/SafeClaw.git
 cd SafeClaw
-npm install
-npm link
+npm install && npm start
 ```
 
 ## 2. Set your API key
 
-Your Anthropic key stays local -it's used by the Claude Agent SDK directly on your machine and is never sent to Authensor.
+Your API key stays local -- it's used by the agent directly on your machine and is never sent to Authensor.
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
+Or for OpenAI:
+
+```bash
+export OPENAI_API_KEY=sk-...
+```
+
 ## 3. Initialize a profile
 
-```bash
-safeclaw init --auth-token <your-authensor-token>
-```
-
-This creates a profile at `~/.safeclaw/config.json` with a unique install ID and a default deny-by-default policy.
-
-## 4. Apply your policy
+The setup wizard handles this automatically. Or via CLI:
 
 ```bash
-safeclaw policy apply
+safeclaw init --demo
 ```
 
-This uploads your local policy to the Authensor control plane and activates it.
+This creates a profile at `~/.safeclaw/config.json` with a unique install ID, a demo Authensor token, and a deny-by-default policy.
 
-## 5. Run a task
+## 4. Run a task
 
 ```bash
 safeclaw run "Summarize this document"
 ```
 
-The agent runs locally. Read operations execute immediately. Write, network, and exec operations are checked against your policy -risky ones pause and wait for your approval.
+The agent runs locally. Read operations execute immediately. Write, network, and exec operations are checked against your policy -- risky ones pause and wait for your approval.
 
-## 6. Approve risky actions
+## 5. Approve risky actions
 
 When the agent tries something risky, it pauses and prints:
 
@@ -58,27 +64,21 @@ When the agent tries something risky, it pauses and prints:
   Waiting up to 300s...
 ```
 
-In another terminal:
+Approve from the dashboard, or in another terminal:
 
 ```bash
 safeclaw approvals approve rcpt_abc123
-```
-
-Or check all pending approvals:
-
-```bash
-safeclaw approvals
 ```
 
 ## Customize your policy
 
 Edit `~/.safeclaw/policies/default.json` or copy a template from `policies/`:
 
-- `policies/default-safe.json` -recommended (reads allowed, writes need approval)
-- `policies/high-risk-approval.json` -everything non-read needs approval
-- `policies/sandbox-readonly.json` -read-only with approval for all writes
-- `policies/strict-deny.json` -deny everything (nothing runs)
-- `policies/allowlist.example.json` -allow specific domains only
+- `policies/default-safe.json` -- recommended (reads allowed, writes need approval)
+- `policies/high-risk-approval.json` -- everything non-read needs approval
+- `policies/sandbox-readonly.json` -- read-only with approval for all writes
+- `policies/strict-deny.json` -- deny everything (nothing runs)
+- `policies/allowlist.example.json` -- allow specific domains only
 
 After editing, re-apply: `safeclaw policy apply`
 
@@ -87,4 +87,4 @@ After editing, re-apply: `safeclaw policy apply`
 - Each profile has its own `installId` and policy file
 - Your API key never leaves your machine
 - If Authensor is unreachable, all non-read actions are denied (fail closed)
-- Use `safeclaw health` to verify connectivity to the control plane
+- Use `safeclaw doctor` to run 10 diagnostic checks on your setup

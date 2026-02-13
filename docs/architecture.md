@@ -59,8 +59,21 @@ Each `installId` has its own policy and approval stream. Use profiles to separat
 | Module | Purpose |
 |--------|---------|
 | `agent.js` | Runs the Claude Agent SDK with gateway hook |
-| `gateway.js` | PreToolUse hook -intercepts tools, calls Authensor |
+| `openai-agent.js` | OpenAI-provider agent loop with tool-call gating |
+| `gateway.js` | PreToolUse hook — intercepts tools, calls Authensor |
 | `classifier.js` | Maps tool names to action types, sanitizes secrets |
 | `authensor.js` | HTTP client for the Authensor control plane |
 | `cli.js` | CLI commands (init, run, approvals, policy, etc.) |
 | `config.js` | Profile and config management (~/.safeclaw/) |
+| `server.js` | Local HTTP + SSE server powering the dashboard |
+| `policy.js` | Policy file loading, validation, and upload |
+| `audit.js` | Append-only hash-chained local audit log |
+| `session.js` | Task session persistence and history |
+| `budget.js` | Per-period spend tracking and budget enforcement |
+| `analytics.js` | Action counts, category breakdowns, trends |
+| `scheduler.js` | Cron-style scheduled task execution |
+| `webhook.js` | Outbound webhook notifications |
+| `notify.js` | SMS/email approval notifications |
+| `validate.js` | Input validation, secret redaction, safe regex |
+| `doctor.js` | Diagnostic checks (`safeclaw doctor`) |
+| `tools.js` | Tool definitions for the agent sandbox |

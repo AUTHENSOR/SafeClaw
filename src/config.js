@@ -97,6 +97,9 @@ export function loadDotEnv() {
  * Write a key=value pair to ~/.safeclaw/.env (chmod 600).
  */
 export function writeEnvVar(key, value) {
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
+    throw new Error('Invalid env var key');
+  }
   if (typeof value === 'string' && /[\r\n\0]/.test(value)) {
     throw new Error('Invalid env value: contains newline or null byte');
   }

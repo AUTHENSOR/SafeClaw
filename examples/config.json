@@ -3,7 +3,7 @@
   "profiles": {
     "default": {
       "installId": "11111111-1111-1111-1111-111111111111",
-      "controlPlane": "https://authensor-control-plane.onrender.com",
+      "controlPlane": "https://authensor-api-production.up.railway.app",
       "authToken": "",
       "provider": {
         "apiKeyEnv": "ANTHROPIC_API_KEY"

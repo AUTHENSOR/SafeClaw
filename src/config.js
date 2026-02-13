@@ -30,7 +30,7 @@ export function ensureProfile(cfg, name) {
   if (!cfg.profiles[name]) {
     cfg.profiles[name] = {
       installId: crypto.randomUUID(),
-      controlPlane: 'https://authensor-control-plane.onrender.com',
+      controlPlane: 'https://authensor-api-production.up.railway.app',
       authToken: '',
       provider: { name: 'claude', apiKeyEnv: 'ANTHROPIC_API_KEY', model: '' },
       policy: { path: defaultPolicyPath(name), id: '' }

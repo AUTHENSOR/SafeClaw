@@ -12,7 +12,7 @@ safeclaw init [flags]
 
 Flags:
 - `--profile <name>` -profile name (default: `default`)
-- `--control-plane <url>` -Authensor control plane URL (default: `https://authensor-control-plane.onrender.com`)
+- `--control-plane <url>` -Authensor control plane URL (default: `https://authensor-api-production.up.railway.app`)
 - `--auth-token <token>` -Authensor API token
 - `--api-key-env <var>` -environment variable for your Anthropic key (default: `ANTHROPIC_API_KEY`)
 
@@ -87,7 +87,7 @@ Location: `~/.safeclaw/config.json`
   "profiles": {
     "default": {
       "installId": "2f8f2a0a-8d1c-4d1c-b76b-2d95bdf5b3f9",
-      "controlPlane": "https://authensor-control-plane.onrender.com",
+      "controlPlane": "https://authensor-api-production.up.railway.app",
       "authToken": "authensor_demo_...",
       "provider": {
         "apiKeyEnv": "ANTHROPIC_API_KEY"

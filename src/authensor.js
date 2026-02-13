@@ -1,7 +1,7 @@
 // Authensor control plane API client.
 // Only action metadata (type + resource) leaves the machine. Never keys.
 
-const DEFAULT_CONTROL_PLANE = 'https://authensor-control-plane.onrender.com';
+const DEFAULT_CONTROL_PLANE = 'https://authensor-api-production.up.railway.app';
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_MAX_RETRIES = 3;
 const INITIAL_BACKOFF_MS = 1000;

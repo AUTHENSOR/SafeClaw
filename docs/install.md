@@ -22,7 +22,7 @@ This makes the `safeclaw` command available globally.
 Serve the `ui/` folder as static files. Pass `controlPlane` and `installId` as query params if hosted separately:
 
 ```
-https://your-ui-host/ui/?controlPlane=https://authensor-control-plane.onrender.com&installId=your-install-id
+https://your-ui-host/ui/?controlPlane=https://authensor-api-production.up.railway.app&installId=your-install-id
 ```
 
 ## Auth

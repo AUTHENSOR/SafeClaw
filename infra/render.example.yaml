@@ -9,4 +9,4 @@ services:
       - key: SAFECLAW_MODE
         value: production
       - key: AUTHENSOR_CONTROL_PLANE_URL
-        value: https://authensor-control-plane.onrender.com
+        value: https://authensor-api-production.up.railway.app

@@ -772,7 +772,7 @@ async function handleProvisionDemo(req, res) {
     const installId = body.installId || `safeclaw_${Date.now()}`;
 
     const client = new AuthensorClient({
-      controlPlaneUrl: 'https://authensor-control-plane.onrender.com',
+      controlPlaneUrl: 'https://authensor-api-production.up.railway.app',
     });
 
     const result = await client.provisionDemo(installId);

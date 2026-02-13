@@ -4,3 +4,4 @@ node_modules/
 .safeclaw/
 .DS_Store
 coverage/
+.claude/

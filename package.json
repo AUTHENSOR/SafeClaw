@@ -1,6 +1,6 @@
 {
   "name": "@authensor/safeclaw",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta.1",
   "type": "module",
   "description": "Safe-by-default AI agent. Gates every action through Authensor before it executes. Supports Claude and OpenAI.",
   "bin": {
@@ -19,7 +19,8 @@
     "ui/",
     "policies/",
     "Dockerfile",
-    ".dockerignore"
+    ".dockerignore",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "ai",
@@ -33,9 +34,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/JKEARN/SafeClaw.git"
+    "url": "https://github.com/AUTHENSOR/SafeClaw.git"
   },
-  "homepage": "https://github.com/JKEARN/SafeClaw",
+  "homepage": "https://github.com/AUTHENSOR/SafeClaw",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.1.0"

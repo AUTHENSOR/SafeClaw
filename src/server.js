@@ -57,6 +57,11 @@ const MIME = {
 
 // Global event bus for SSE broadcasting
 export const eventBus = new EventEmitter();
+eventBus.setMaxListeners(100);
+
+// SSE connection limits
+const MAX_SSE_CONNECTIONS = 50;
+let sseConnectionCount = 0;
 
 // Active task state (single task at a time) + task queue
 let activeTask = null;
@@ -68,9 +73,14 @@ function parseBody(req, limit = 1024 * 1024) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     let size = 0;
+    const timeout = setTimeout(() => {
+      reject(new Error('Request body timeout'));
+      req.destroy();
+    }, 10000);
     req.on('data', chunk => {
       size += chunk.length;
       if (size > limit) {
+        clearTimeout(timeout);
         reject(new Error('Body too large'));
         req.destroy();
         return;
@@ -78,6 +88,7 @@ function parseBody(req, limit = 1024 * 1024) {
       chunks.push(chunk);
     });
     req.on('end', () => {
+      clearTimeout(timeout);
       try {
         const raw = Buffer.concat(chunks).toString();
         resolve(raw ? JSON.parse(raw) : {});
@@ -85,7 +96,10 @@ function parseBody(req, limit = 1024 * 1024) {
         reject(new Error('Invalid JSON'));
       }
     });
-    req.on('error', reject);
+    req.on('error', (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
   });
 }
 
@@ -601,6 +615,11 @@ function processQueue() {
 }
 
 function handleTaskStream(req, res, taskId) {
+  if (sseConnectionCount >= MAX_SSE_CONNECTIONS) {
+    return errorJson(res, 'Too many SSE connections', 429);
+  }
+  sseConnectionCount++;
+
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -629,6 +648,7 @@ function handleTaskStream(req, res, taskId) {
   }, 15000);
 
   req.on('close', () => {
+    sseConnectionCount--;
     eventBus.removeListener(`task:${taskId}`, listener);
     clearInterval(heartbeat);
     if (sseConnections) sseConnections.delete(res);
@@ -703,6 +723,11 @@ async function handleReceipts(req, res) {
 }
 
 function handleGlobalSSE(req, res) {
+  if (sseConnectionCount >= MAX_SSE_CONNECTIONS) {
+    return errorJson(res, 'Too many SSE connections', 429);
+  }
+  sseConnectionCount++;
+
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -726,6 +751,7 @@ function handleGlobalSSE(req, res) {
   }, 15000);
 
   req.on('close', () => {
+    sseConnectionCount--;
     eventBus.removeListener('global', listener);
     clearInterval(heartbeat);
     if (sseConnections) sseConnections.delete(res);
@@ -938,15 +964,20 @@ async function handlePolicyLoadTemplate(req, res) {
   try {
     const body = await parseBody(req);
     if (!body.template) throw new ValidationError('template filename is required');
-    const templatesDir = path.join(__dirname, '..', 'policies');
-    const templatePath = path.join(templatesDir, body.template);
-    // Path traversal prevention -resolved path must stay within templates directory
-    if (!path.resolve(templatePath).startsWith(path.resolve(templatesDir) + path.sep) &&
-        path.resolve(templatePath) !== path.resolve(templatesDir)) {
+    // Only allow simple filenames — no slashes, dots-dots, or path separators
+    if (/[/\\]|\.\./.test(body.template)) {
       return errorJson(res, 'Forbidden', 403);
     }
+    const templatesDir = path.join(__dirname, '..', 'policies');
+    const templatePath = path.join(templatesDir, body.template);
     if (!fs.existsSync(templatePath)) throw new NotFoundError('Template not found');
-    const template = JSON.parse(fs.readFileSync(templatePath, 'utf-8'));
+    // Resolve symlinks and verify the real path is inside the templates directory
+    const realTemplatePath = fs.realpathSync(templatePath);
+    const realTemplatesDir = fs.realpathSync(templatesDir);
+    if (!realTemplatePath.startsWith(realTemplatesDir + path.sep)) {
+      return errorJson(res, 'Forbidden', 403);
+    }
+    const template = JSON.parse(fs.readFileSync(realTemplatePath, 'utf-8'));
     savePolicy(profile.policy.path, template);
     json(res, { ok: true, policy: template });
   } catch (err) {

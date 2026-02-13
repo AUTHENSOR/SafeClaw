@@ -79,6 +79,21 @@ export function validateSettings(s) {
     const url = s.notifyChannels.webhook.url;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       errors.push('webhook URL must start with http:// or https://');
+    } else {
+      try {
+        const parsed = new URL(url);
+        const host = parsed.hostname.toLowerCase();
+        const PRIVATE_PATTERNS = [
+          /^127\./, /^10\./, /^172\.(1[6-9]|2\d|3[01])\./, /^192\.168\./,
+          /^169\.254\./, /^0\./, /^localhost$/i, /^::1$/, /^\[::1\]$/,
+          /^fc[0-9a-f]{2}:/i, /^fe80:/i,
+        ];
+        if (PRIVATE_PATTERNS.some(p => p.test(host))) {
+          errors.push('webhook URL must not point to a private or loopback address');
+        }
+      } catch {
+        errors.push('webhook URL is not a valid URL');
+      }
     }
   }
   if (s.notifyChannels?.webhook?.events) {

@@ -15,7 +15,11 @@ export function loadConfig() {
   if (!fs.existsSync(CONFIG_FILE)) {
     return { activeProfile: 'default', profiles: {} };
   }
-  return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf-8'));
+  try {
+    return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf-8'));
+  } catch {
+    return { activeProfile: 'default', profiles: {} };
+  }
 }
 
 export function saveConfig(cfg) {
@@ -121,8 +125,7 @@ export function writeEnvVar(key, value) {
   });
   if (!found) lines.push(`${key}=${value}`);
 
-  fs.writeFileSync(envPath, lines.join('\n'));
-  fs.chmodSync(envPath, 0o600);
+  fs.writeFileSync(envPath, lines.join('\n'), { mode: 0o600 });
 
   // Also set in current process
   process.env[key] = value;

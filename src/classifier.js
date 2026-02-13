@@ -151,6 +151,9 @@ export function detectRiskSignals(toolName, toolInput, actionType, resource) {
  * @returns {{ actionType: string, resource: string, riskSignals: string[] }}
  */
 export function classify(toolName, toolInput) {
+  if (!toolName || typeof toolName !== 'string') {
+    return { actionType: 'unknown', resource: '', riskSignals: [] };
+  }
   const input = toolInput || {};
 
   // Handle MCP tools: mcp__<server>__<action>

@@ -16,8 +16,12 @@ export function ensurePolicyFile(policyPath) {
 
 export function loadPolicy(policyPath) {
   const realPath = expandHome(policyPath);
-  const raw = fs.readFileSync(realPath, 'utf-8');
-  return JSON.parse(raw);
+  try {
+    const raw = fs.readFileSync(realPath, 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
 
 /**

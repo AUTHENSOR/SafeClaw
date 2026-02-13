@@ -743,7 +743,8 @@ function renderApprovals(list) {
 
     card.querySelectorAll('.card-actions button').forEach(function (btn) {
       btn.addEventListener('click', async function () {
-        btn.disabled = true;
+        // Disable ALL buttons on this card to prevent double-click race
+        card.querySelectorAll('.card-actions button').forEach(function (b) { b.disabled = true; });
         await fetchApi('/api/approvals/' + encodeURIComponent(btn.dataset.id), {
           method: 'POST',
           body: JSON.stringify({ action: btn.dataset.action }),

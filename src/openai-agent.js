@@ -543,12 +543,12 @@ export async function runOpenAIAgent({ task, profile, verbose = false, emitter =
         const decision = hookResult?.hookSpecificOutput?.permissionDecision;
         const reason = hookResult?.hookSpecificOutput?.permissionDecisionReason || '';
 
-        if (decision === 'deny') {
-          process.stderr.write(`[SafeClaw] Denied: ${classifierName} -${reason}\n`);
+        if (decision !== 'allow' && decision !== 'approved') {
+          process.stderr.write(`[SafeClaw] Denied: ${classifierName} -${reason || decision || 'no explicit allow'}\n`);
           messages.push({
             role: 'tool',
             tool_call_id: tc.id,
-            content: `Action denied by SafeClaw: ${reason}`,
+            content: `Action denied by SafeClaw: ${reason || 'not explicitly allowed'}`,
           });
           continue;
         }

@@ -9,7 +9,7 @@ All notable changes to SafeClaw are documented here.
 - Simplified API key instructions with direct links to key creation pages
 
 ### Changed
-- SW cache bumped to `v1.0.0-beta.12`
+- SW cache bumped to `v1.0.0-beta.2`
 
 ## [1.0.0-beta.1] -2026-02-12
 
@@ -26,7 +26,7 @@ All notable changes to SafeClaw are documented here.
 ### Changed
 - `classify()` return shape extended: `{ actionType, resource }` → `{ actionType, resource, riskSignals }`
 - Gateway hook threads `riskSignals` through all audit, SSE, SMS, and webhook paths
-- SW cache bumped to `v1.0.0-beta.11`
+- SW cache bumped to `v1.0.0-beta.1`
 
 ## [1.0.0-beta] -2026-02-10
 

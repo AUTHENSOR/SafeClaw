@@ -46,7 +46,7 @@ export function getCurrentSpend(sessionsDir) {
     if (!s.startedAt || !s.cost) continue;
     const sessionDate = new Date(s.startedAt);
     if (sessionDate >= start && sessionDate < end) {
-      totalUsd += typeof s.cost === 'number' ? s.cost : 0;
+      totalUsd += typeof s.cost === 'number' ? s.cost : (parseFloat(s.cost) || 0);
     }
   }
 
@@ -82,6 +82,7 @@ export function checkBudget(sessionsDir, settingsOverride) {
     currentUsd: totalUsd,
     limitUsd,
     percentUsed,
+    period: budget.period || 'daily',
     enabled: true,
   };
 }

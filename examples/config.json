@@ -6,7 +6,9 @@
       "controlPlane": "https://authensor-api-production.up.railway.app",
       "authToken": "",
       "provider": {
-        "apiKeyEnv": "ANTHROPIC_API_KEY"
+        "name": "claude",
+        "apiKeyEnv": "ANTHROPIC_API_KEY",
+        "model": ""
       },
       "policy": {
         "path": "~/.safeclaw/policies/default.json",

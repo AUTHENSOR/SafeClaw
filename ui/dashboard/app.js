@@ -125,11 +125,16 @@ async function fetchApi(path, options) {
     ...options,
   });
   const text = await res.text();
+  var body;
   try {
-    return JSON.parse(text);
+    body = JSON.parse(text);
   } catch {
-    return { raw: text };
+    body = { raw: text };
   }
+  if (!res.ok && !body.error) {
+    body.error = body.raw || ('HTTP ' + res.status);
+  }
+  return body;
 }
 
 // --- Status bar ---
@@ -591,38 +596,44 @@ function connectTaskSSE(taskId) {
   taskSSE = new EventSource('/api/task/' + taskId + '/stream');
 
   taskSSE.addEventListener('agent:text', function (e) {
-    var data = JSON.parse(e.data);
-    agentTextBuffer += (data.text || '');
-    updateAgentBubble();
+    try {
+      var data = JSON.parse(e.data);
+      agentTextBuffer += (data.text || '');
+      updateAgentBubble();
+    } catch (err) { console.error('SSE parse error:', err); }
   });
 
   taskSSE.addEventListener('agent:tool_call', function (e) {
-    var data = JSON.parse(e.data);
-    // Finalize current agent bubble before inserting tool call
-    finalizeAgentBubble();
-    appendBubble('tool',
-      '<span class="tool-name">' + escapeHtml(data.toolName) + '</span> ' +
-      escapeHtml(data.inputSummary || '')
-    );
+    try {
+      var data = JSON.parse(e.data);
+      // Finalize current agent bubble before inserting tool call
+      finalizeAgentBubble();
+      appendBubble('tool',
+        '<span class="tool-name">' + escapeHtml(data.toolName) + '</span> ' +
+        escapeHtml(data.inputSummary || '')
+      );
+    } catch (err) { console.error('SSE parse error:', err); }
   });
 
   taskSSE.addEventListener('agent:approval_required', function (e) {
-    var data = JSON.parse(e.data);
-    finalizeAgentBubble();
-    var el = document.getElementById('output-content');
-    var div = document.createElement('div');
-    div.className = 'approval-waiting';
-    var riskHtml = '';
-    if (data.riskSignals && data.riskSignals.length) {
-      riskHtml = '<div class="risk-signals">' + data.riskSignals.map(function(s) {
-        return '<span class="badge badge-risk">' + escapeHtml(s) + '</span>';
-      }).join('') + '</div>';
-    }
-    div.innerHTML = 'Waiting for approval: ' + escapeHtml(data.actionType) + ' on ' + escapeHtml(data.resource) + riskHtml;
-    el.appendChild(div);
-    el.scrollTop = el.scrollHeight;
-    refreshApprovals();
-    showApprovalNotification(data);
+    try {
+      var data = JSON.parse(e.data);
+      finalizeAgentBubble();
+      var el = document.getElementById('output-content');
+      var div = document.createElement('div');
+      div.className = 'approval-waiting';
+      var riskHtml = '';
+      if (data.riskSignals && data.riskSignals.length) {
+        riskHtml = '<div class="risk-signals">' + data.riskSignals.map(function(s) {
+          return '<span class="badge badge-risk">' + escapeHtml(s) + '</span>';
+        }).join('') + '</div>';
+      }
+      div.innerHTML = 'Waiting for approval: ' + escapeHtml(data.actionType) + ' on ' + escapeHtml(data.resource) + riskHtml;
+      el.appendChild(div);
+      el.scrollTop = el.scrollHeight;
+      refreshApprovals();
+      showApprovalNotification(data);
+    } catch (err) { console.error('SSE parse error:', err); }
   });
 
   taskSSE.addEventListener('agent:approval_resolved', function () {
@@ -630,19 +641,21 @@ function connectTaskSSE(taskId) {
   });
 
   taskSSE.addEventListener('agent:done', function (e) {
-    var data = JSON.parse(e.data);
-    finalizeAgentBubble();
-    showIdleState(data.success ? 'Done' : 'Error');
-    if (data.error) {
-      appendBubble('system', '<div style="color:var(--danger)">Error: ' + escapeHtml(data.error) + '</div>');
-    }
-    if (data.cost) {
-      appendBubble('system', '<div class="muted">Cost: $' + escapeHtml(String(data.cost)) + '</div>');
-    }
-    taskSSE.close();
-    taskSSE = null;
-    refreshApprovals();
-    refreshReceipts();
+    try {
+      var data = JSON.parse(e.data);
+      finalizeAgentBubble();
+      showIdleState(data.success ? 'Done' : 'Error');
+      if (data.error) {
+        appendBubble('system', '<div style="color:var(--danger)">Error: ' + escapeHtml(data.error) + '</div>');
+      }
+      if (data.cost) {
+        appendBubble('system', '<div class="muted">Cost: $' + escapeHtml(String(data.cost)) + '</div>');
+      }
+      taskSSE.close();
+      taskSSE = null;
+      refreshApprovals();
+      refreshReceipts();
+    } catch (err) { console.error('SSE parse error:', err); }
   });
 
   taskSSE.onerror = function () {

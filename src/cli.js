@@ -381,7 +381,7 @@ async function main() {
         try {
           const policy = loadPolicy(profile.policy.path);
           console.log(`\n  Policy Simulation:`);
-          for (const actionType of ['filesystem.write', 'filesystem.read', 'network.http', 'bash.execute']) {
+          for (const actionType of ['filesystem.write', 'safe.read.file', 'network.http', 'code.exec']) {
             const result = simulatePolicy(policy, actionType, '/example');
             const ruleName = result.matchedRule ? (result.matchedRule.description || result.matchedRule.id) : 'default';
             console.log(`    ${actionType} → ${result.effect} (${ruleName})`);

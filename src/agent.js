@@ -94,7 +94,7 @@ export async function runAgent({ task, profile, verbose = false, emitter = null,
       } else if (message.type === 'result') {
         if (message.subtype === 'success') {
           process.stdout.write('\n');
-          const cost = message.total_cost_usd != null ? message.total_cost_usd.toFixed(4) : null;
+          const cost = message.total_cost_usd != null ? parseFloat(message.total_cost_usd.toFixed(4)) : null;
           if (verbose && cost) {
             process.stderr.write(`[SafeClaw] Done. Cost: $${cost}\n`);
           }

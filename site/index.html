@@ -506,6 +506,22 @@
       max-width: 320px;
       margin: 0 auto;
     }
+    .star-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      text-decoration: none;
+      border: 1px solid rgba(23, 30, 25, 0.15);
+      border-radius: 8px;
+      padding: 8px 18px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .star-link:hover { transform: translateY(-2px); background: rgba(213, 244, 249, 0.15); }
+    .star-link svg { width: 16px; height: 16px; }
 
     /* Footer */
     footer {
@@ -730,6 +746,10 @@
         <code><span class="prefix">$ </span>npx safeclaw</code>
         <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
       </div>
+      <a class="star-link" href="https://github.com/JKEARN/SafeClaw" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Star on GitHub
+      </a>
     </section>
 
     <footer>

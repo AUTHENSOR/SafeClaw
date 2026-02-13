@@ -1779,8 +1779,8 @@ async function saveSmsForm() {
   var payload = {};
   if (sid) payload.sid = sid;
   if (token) payload.token = token;
-  if (from) payload.from = from;
-  if (phone) payload.phone = phone;
+  if (from) payload.fromNumber = from;
+  if (phone) payload.notifyPhone = phone;
 
   try {
     var result = await fetchApi('/api/sms', { method: 'PUT', body: JSON.stringify(payload) });

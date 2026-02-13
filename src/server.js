@@ -65,6 +65,7 @@ let sseConnectionCount = 0;
 
 // Active task state (single task at a time) + task queue
 let activeTask = null;
+let taskStarting = false; // synchronous guard against concurrent POST /api/task
 const taskQueue = [];
 
 // --- JSON body parser ---
@@ -132,7 +133,7 @@ function serveStatic(req, res) {
     headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
   }
   res.writeHead(200, headers);
-  fs.createReadStream(resolved).pipe(res);
+  fs.createReadStream(resolved).on('error', () => { try { res.end(); } catch {} }).pipe(res);
 }
 
 // --- JSON response helpers ---
@@ -161,7 +162,14 @@ function setSecurityHeaders(res) {
 async function handleRequest(req, res) {
   setSecurityHeaders(res);
 
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  let url;
+  try {
+    url = new URL(req.url, `http://${req.headers.host}`);
+  } catch {
+    res.writeHead(400);
+    res.end('Bad Request');
+    return;
+  }
   const pathname = url.pathname;
   const method = req.method;
 
@@ -327,7 +335,11 @@ async function handleRequest(req, res) {
     }
   }
 
-  serveStatic(req, res);
+  try {
+    serveStatic(req, res);
+  } catch (err) {
+    if (!res.headersSent) { res.writeHead(500); res.end('Internal error'); }
+  }
 }
 
 // --- Helpers ---
@@ -479,14 +491,15 @@ async function handleTaskStart(req, res) {
 
     const taskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-    // If a task is already running, queue this one
-    if (activeTask) {
+    // If a task is already running or starting, queue this one
+    if (activeTask || taskStarting) {
       taskQueue.push({ id: taskId, task, container: !!container, workspace: workspace || '', model: model || '', addedAt: new Date().toISOString() });
       eventBus.emit('global', { type: 'queue:updated', data: { queueLength: taskQueue.length } });
       return json(res, { taskId, queued: true, position: taskQueue.length }, 202);
     }
 
-    // Start immediately
+    // Set synchronous guard before any async work
+    taskStarting = true;
     startTaskExecution(taskId, task, container, workspace, model, profile);
     json(res, { taskId });
   } catch (err) {
@@ -501,8 +514,9 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
     if (budgetStatus.exceeded) {
       if (budgetStatus.action === 'block') {
         // Emit done event so SSE clients know the task was blocked
+        taskStarting = false;
         eventBus.emit(`task:${taskId}`, { type: 'agent:done', data: { error: `Budget limit exceeded. Task blocked.` } });
-        processQueue();
+        setImmediate(processQueue);
         return;
       }
       sendWebhook('budget_warning', {
@@ -525,6 +539,7 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
   const abortController = new AbortController();
 
   activeTask = { id: taskId, status: 'running', startedAt: new Date().toISOString(), abortController };
+  taskStarting = false;
 
   // Session accumulator -records transcript for history
   const session = {
@@ -570,7 +585,7 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
       return m.runContainer({ runtime, task, profile: taskProfile, workspacePath: workspace || process.cwd(), verbose: false });
     });
   } else {
-    agentPromise = runAgent({ task, profile: taskProfile, verbose: false, emitter: eventBus, taskId });
+    agentPromise = runAgent({ task, profile: taskProfile, verbose: false, emitter: eventBus, taskId, signal: abortController.signal });
   }
 
   agentPromise
@@ -602,15 +617,20 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
 }
 
 function processQueue() {
-  if (activeTask) return;
+  if (activeTask || taskStarting) return;
   if (taskQueue.length === 0) return;
 
   const next = taskQueue.shift();
   eventBus.emit('global', { type: 'queue:updated', data: { queueLength: taskQueue.length } });
 
   const profile = getProfileOrNull();
-  if (!profile) return;
+  if (!profile) {
+    // Profile missing — retry next item on next tick to avoid sync recursion
+    if (taskQueue.length > 0) setImmediate(processQueue);
+    return;
+  }
 
+  taskStarting = true;
   startTaskExecution(next.id, next.task, next.container, next.workspace, next.model, profile);
 }
 
@@ -632,19 +652,21 @@ function handleTaskStream(req, res, taskId) {
   if (sseConnections) sseConnections.add(res);
 
   const listener = (event) => {
+    if (res.destroyed) return;
     // Redact secrets from agent text before sending to browser
     const data = event.data ? { ...event.data } : {};
     if (data.text) data.text = redactSecrets(data.text);
-    res.write(`event: ${event.type}\ndata: ${JSON.stringify(data)}\n\n`);
+    try { res.write(`event: ${event.type}\ndata: ${JSON.stringify(data)}\n\n`); } catch {}
     if (event.type === 'agent:done') {
-      res.end();
+      try { res.end(); } catch {}
     }
   };
 
   eventBus.on(`task:${taskId}`, listener);
 
   const heartbeat = setInterval(() => {
-    res.write(': heartbeat\n\n');
+    if (res.destroyed) return;
+    try { res.write(': heartbeat\n\n'); } catch {}
   }, 15000);
 
   req.on('close', () => {
@@ -662,6 +684,7 @@ function handleTaskStop(req, res, taskId) {
   activeTask.abortController.abort();
   activeTask = null;
   json(res, { ok: true });
+  processQueue();
 }
 
 async function handleApprovalsList(req, res) {
@@ -739,15 +762,17 @@ function handleGlobalSSE(req, res) {
   if (sseConnections) sseConnections.add(res);
 
   const listener = (event) => {
+    if (res.destroyed) return;
     const data = event.data ? { ...event.data } : {};
     if (data.text) data.text = redactSecrets(data.text);
-    res.write(`event: ${event.type}\ndata: ${JSON.stringify(data)}\n\n`);
+    try { res.write(`event: ${event.type}\ndata: ${JSON.stringify(data)}\n\n`); } catch {}
   };
 
   eventBus.on('global', listener);
 
   const heartbeat = setInterval(() => {
-    res.write(': heartbeat\n\n');
+    if (res.destroyed) return;
+    try { res.write(': heartbeat\n\n'); } catch {}
   }, 15000);
 
   req.on('close', () => {
@@ -772,12 +797,14 @@ function handlePolicyGet(req, res) {
 }
 
 async function handlePolicyApply(req, res) {
-  const profile = getProfileOrNull();
+  const cfg = loadConfig();
+  const result = getProfile(cfg);
+  const profile = result ? result.profile : null;
   if (!profile) return errorJson(res, 'No profile configured', 400);
 
   try {
-    const cfg = loadConfig();
     const policy = loadPolicy(profile.policy.path);
+    if (!policy) return errorJson(res, 'Policy file is missing or corrupt', 500);
     const client = new AuthensorClient({
       controlPlaneUrl: profile.controlPlane,
       authToken: profile.authToken,
@@ -875,6 +902,7 @@ function handlePolicyRulesGet(req, res) {
   if (!profile?.policy?.path) return errorJson(res, 'No policy configured', 400);
   try {
     const policy = loadPolicy(profile.policy.path);
+    if (!policy) return errorJson(res, 'Policy file is missing or corrupt', 500);
     json(res, {
       rules: policy.rules || [],
       defaultEffect: policy.defaultEffect,
@@ -896,6 +924,7 @@ async function handlePolicyRuleAdd(req, res) {
     if (!effect || !condition) throw new ValidationError('effect and condition are required');
 
     const policy = loadPolicy(profile.policy.path);
+    if (!policy) return errorJson(res, 'Policy file is missing or corrupt', 500);
     if (!policy.rules) policy.rules = [];
     const ruleId = `rule-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const newRule = { id: ruleId, effect, description: description || '', condition };
@@ -913,6 +942,7 @@ async function handlePolicyRuleUpdate(req, res, ruleId) {
   try {
     const body = await parseBody(req);
     const policy = loadPolicy(profile.policy.path);
+    if (!policy) return errorJson(res, 'Policy file is missing or corrupt', 500);
     const idx = (policy.rules || []).findIndex(r => r.id === ruleId);
     if (idx === -1) throw new NotFoundError('Rule not found');
 
@@ -932,6 +962,7 @@ async function handlePolicyRuleDelete(req, res, ruleId) {
   if (!profile?.policy?.path) return errorJson(res, 'No policy configured', 400);
   try {
     const policy = loadPolicy(profile.policy.path);
+    if (!policy) return errorJson(res, 'Policy file is missing or corrupt', 500);
     const idx = (policy.rules || []).findIndex(r => r.id === ruleId);
     if (idx === -1) throw new NotFoundError('Rule not found');
 
@@ -1486,6 +1517,14 @@ function tryListen(server, port, host) {
 }
 
 export async function startServer({ open = true } = {}) {
+  // Prevent unhandled rejections from crashing the server (register once)
+  if (!process._safeclawRejectionHandler) {
+    process._safeclawRejectionHandler = (err) => {
+      logger.error('Unhandled rejection', { error: err?.message || String(err) });
+    };
+    process.on('unhandledRejection', process._safeclawRejectionHandler);
+  }
+
   // Load .env before anything else
   loadDotEnv();
 
@@ -1521,7 +1560,14 @@ export async function startServer({ open = true } = {}) {
   const shutdown = () => {
     logger.info('Shutting down gracefully...');
     stopSchedulerTick();
-    if (activeTask?.abortController) activeTask.abortController.abort();
+    // Save in-flight session before aborting
+    if (activeTask) {
+      try {
+        const session = { id: activeTask.id, status: 'aborted', finishedAt: new Date().toISOString(), error: 'Server shutdown' };
+        saveSession(session);
+      } catch {}
+      if (activeTask.abortController) activeTask.abortController.abort();
+    }
     for (const conn of sseConnections) {
       try { conn.end(); } catch {}
     }

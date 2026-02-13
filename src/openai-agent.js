@@ -351,7 +351,7 @@ async function* parseSSEStream(response) {
  *
  * @param {{ task: string, profile: object, verbose?: boolean, emitter?: EventEmitter, taskId?: string }} opts
  */
-export async function runOpenAIAgent({ task, profile, verbose = false, emitter = null, taskId = null }) {
+export async function runOpenAIAgent({ task, profile, verbose = false, emitter = null, taskId = null, signal = null }) {
   const model = profile.provider?.model || DEFAULT_MODEL;
   const keyEnv = profile.provider?.apiKeyEnv || 'OPENAI_API_KEY';
   const apiKey = process.env[keyEnv];
@@ -401,12 +401,16 @@ export async function runOpenAIAgent({ task, profile, verbose = false, emitter =
       // Call OpenAI API with streaming + retry for transient errors
       let response;
       for (let attempt = 0; attempt <= OPENAI_MAX_RETRIES; attempt++) {
+        const fetchSignal = signal
+          ? AbortSignal.any([signal, AbortSignal.timeout(120000)])
+          : AbortSignal.timeout(120000);
         response = await fetch(API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`,
           },
+          signal: fetchSignal,
           body: JSON.stringify({
             model,
             messages,

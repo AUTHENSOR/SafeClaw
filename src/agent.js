@@ -12,11 +12,11 @@ import { redactSecrets } from './validate.js';
  *
  * @param {{ task: string, profile: object, verbose?: boolean, emitter?: EventEmitter, taskId?: string }} opts
  */
-export async function runAgent({ task, profile, verbose = false, emitter = null, taskId = null }) {
+export async function runAgent({ task, profile, verbose = false, emitter = null, taskId = null, signal = null }) {
   // Provider dispatch -OpenAI uses a custom agent loop
   if (profile.provider?.name === 'openai') {
     const { runOpenAIAgent } = await import('./openai-agent.js');
-    return runOpenAIAgent({ task, profile, verbose, emitter, taskId });
+    return runOpenAIAgent({ task, profile, verbose, emitter, taskId, signal });
   }
 
   const approvalTimeout = parseInt(
@@ -49,8 +49,10 @@ export async function runAgent({ task, profile, verbose = false, emitter = null,
 
   const options = {
     allowedTools,
+    maxTurns: 50,
     permissionMode: 'bypassPermissions', // gateway hook IS the permission system
     allowDangerouslySkipPermissions: true, // required with bypassPermissions -safety is handled by the gateway hook
+    abortSignal: signal || undefined,
     hooks: {
       PreToolUse: [
         {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createRequire } from 'module';
-import { loadConfig, saveConfig, ensureProfile, getProfile, setActiveProfile } from './config.js';
+import { loadConfig, saveConfig, ensureProfile, getProfile, setActiveProfile, loadDotEnv } from './config.js';
 import { ensurePolicyFile, loadPolicy, policyHelp, simulatePolicy } from './policy.js';
 import { AuthensorClient } from './authensor.js';
 import { runAgent } from './agent.js';
@@ -83,6 +83,9 @@ Examples:
 async function main() {
   const args = process.argv.slice(2);
   const verbose = args.includes('--verbose') || args.includes('-v');
+
+  // Load .env early so API keys are available for all commands
+  loadDotEnv();
 
   // --- dashboard (no args, or explicit 'dashboard'/'ui') ---
   const cmd = args[0] || '';

@@ -226,7 +226,7 @@ describe('Config API', () => {
 
 describe('SMS API', () => {
   it('SMS env vars can be checked for presence', () => {
-    // In test env, Twilio vars won't be set — verify we can check them
+    // In test env, Twilio vars won't be set -verify we can check them
     const envVars = ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_FROM_NUMBER', 'SAFECLAW_NOTIFY_PHONE'];
     for (const v of envVars) {
       const isSet = typeof process.env[v] === 'string' && process.env[v].length > 0;

@@ -62,7 +62,7 @@ describe('detectWorkspace', () => {
     // but in a clean tmp dir hierarchy it should return null if
     // we exhaust MAX_WALK_UP before finding a marker
     const ws = detectWorkspace(deep);
-    // If it finds something above tmpDir (like system-level .git), that's OK —
+    // If it finds something above tmpDir (like system-level .git), that's OK -
     // the point is it doesn't crash
     expect(ws === null || typeof ws.root === 'string').toBe(true);
   });

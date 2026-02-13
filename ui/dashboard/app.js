@@ -1,4 +1,4 @@
-// SafeClaw Dashboard — Client JS
+// SafeClaw Dashboard - Client JS
 
 let currentWizardStep = 1;
 let selectedProvider = 'claude';
@@ -62,7 +62,7 @@ function showApprovalNotification(data) {
   var actionType = data.actionType || 'action';
   var resource = data.resource || '';
   var riskPrefix = (data.riskSignals && data.riskSignals.length) ? 'Risk: ' + data.riskSignals.join(', ') + '\n' : '';
-  var n = new Notification('SafeClaw — Approval Needed', {
+  var n = new Notification('SafeClaw - Approval Needed', {
     body: riskPrefix + actionType + ' on ' + resource,
     tag: 'safeclaw-approval',
   });
@@ -331,19 +331,22 @@ function updateKeyStepForProvider() {
   var input = document.getElementById('input-api-key');
   var link = document.getElementById('key-link');
   var step2 = document.getElementById('key-help-step2');
+  var signup = document.getElementById('key-help-signup');
 
   if (selectedProvider === 'openai') {
     title.textContent = 'Step 2 of 4: OpenAI API key';
     input.placeholder = 'sk-...';
     link.href = 'https://platform.openai.com/api-keys';
-    link.textContent = 'OpenAI Platform';
-    step2.innerHTML = 'Go to <strong>API Keys</strong> in the left sidebar';
+    link.textContent = 'platform.openai.com/api-keys';
+    signup.textContent = '(create a free account if you don\'t have one)';
+    step2.innerHTML = 'Click <strong>Create new secret key</strong>, give it any name, and copy it';
   } else {
     title.textContent = 'Step 2 of 4: Anthropic API key';
     input.placeholder = 'sk-ant-...';
-    link.href = 'https://console.anthropic.com/';
-    link.textContent = 'Anthropic Console';
-    step2.innerHTML = 'Go to <strong>API Keys</strong> in the left sidebar';
+    link.href = 'https://console.anthropic.com/settings/keys';
+    link.textContent = 'console.anthropic.com/settings/keys';
+    signup.textContent = '(create a free account if you don\'t have one)';
+    step2.innerHTML = 'Click <strong>Create Key</strong>, give it any name, and copy it';
   }
 }
 
@@ -434,10 +437,11 @@ async function requestDemoToken() {
       status.textContent = 'Token auto-filled!';
       status.style.color = 'var(--success)';
     } else {
-      // Endpoint not available — open the form
-      status.textContent = 'Opening request form...';
+      // Endpoint not available -open the form
       window.open(result.formUrl || 'https://forms.gle/QdfeWAr2G4pc8GxQA', '_blank');
-      status.textContent = 'Paste your token after you receive it by email';
+      status.textContent = 'Form opened in new tab';
+      var help = document.getElementById('demo-token-help');
+      if (help) help.textContent = 'Fill out the form, check your email for the token, then paste it below.';
     }
   } catch (err) {
     status.textContent = 'Failed: ' + err.message;
@@ -483,7 +487,7 @@ async function startTask() {
 
     if (result.error) {
       if (result.queued) {
-        // Task was queued — show notification
+        // Task was queued -show notification
         showAlert('Task queued (position ' + result.position + '). It will start when the current task finishes.');
         refreshQueue();
         return;
@@ -560,7 +564,7 @@ async function sendFollowUp() {
     }
     currentTaskId = result.taskId;
     showRunningState();
-    // Connect SSE without clearing — suppress the user bubble since we already showed it
+    // Connect SSE without clearing -suppress the user bubble since we already showed it
     var savedPrompt = lastTaskPrompt;
     lastTaskPrompt = '';
     connectTaskSSE(result.taskId);
@@ -856,11 +860,11 @@ function renderMarkdown(text) {
   escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   // Italic (single * not preceded/followed by space to avoid false positives with lists)
   escaped = escaped.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
-  // Headings (### → h5, ## → h4, # → h3 — downsized for output area)
+  // Headings (### → h5, ## → h4, # → h3 -downsized for output area)
   escaped = escaped.replace(/^### (.+)$/gm, '<h5>$1</h5>');
   escaped = escaped.replace(/^## (.+)$/gm, '<h4>$1</h4>');
   escaped = escaped.replace(/^# (.+)$/gm, '<h3>$1</h3>');
-  // Links (only allow http/https protocols — no relative or fragment URLs)
+  // Links (only allow http/https protocols -no relative or fragment URLs)
   escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(_, text, url) {
     if (/^https?:\/\//i.test(url)) {
       return '<a href="' + url + '" target="_blank" rel="noopener">' + text + '</a>';
@@ -926,7 +930,7 @@ function finalizeAgentBubble() {
 }
 
 function showAlert(msg) {
-  // Simple inline alert — could be improved with a toast component
+  // Simple inline alert -could be improved with a toast component
   var output = document.getElementById('task-output');
   output.classList.remove('hidden');
   var content = document.getElementById('output-content');
@@ -1042,10 +1046,10 @@ async function verifyAuditChain() {
     var result = await fetchApi('/api/audit/verify');
     if (result.valid) {
       banner.className = 'audit-verify-banner audit-verify-ok';
-      banner.textContent = 'Chain intact — ' + (result.totalEntries || 0) + ' entries, ' + (result.chainedEntries || 0) + ' chained';
+      banner.textContent = 'Chain intact: ' + (result.totalEntries || 0) + ' entries, ' + (result.chainedEntries || 0) + ' chained';
     } else {
       banner.className = 'audit-verify-banner audit-verify-fail';
-      banner.textContent = 'Integrity failure — ' + ((result.errors && result.errors[0]) || 'unknown error');
+      banner.textContent = 'Integrity failure: ' + ((result.errors && result.errors[0]) || 'unknown error');
     }
   } catch (err) {
     banner.className = 'audit-verify-banner audit-verify-fail';

@@ -1,4 +1,4 @@
-// Budget enforcement — track spend and enforce limits.
+// Budget enforcement -track spend and enforce limits.
 // Reads session history to compute current spend, compares against settings.
 // Zero new npm dependencies.
 

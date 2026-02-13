@@ -102,13 +102,13 @@ A safe-by-default local AI agent that runs Claude locally, gates every action th
 - [x] 250+ tests across 19 files (budget: 13, audit: +8, analytics: +6, doctor: 12)
 - [x] Zero new npm dependencies
 
-**Phase 7: Dashboard Completeness — Every Feature in the Browser** ✓
+**Phase 7: Dashboard Completeness -Every Feature in the Browser** ✓
 - [x] Claw Clinic tab (GET /api/doctor, diagnostic check-up UI with pass/warn/fail + hints)
 - [x] Audit verify button (GET /api/audit/verify, green/red banner in Audit Log tab)
 - [x] Task runner enhancements (model selector dropdown, container mode checkbox, workspace input)
 - [x] Profile switcher (GET /api/profiles, POST /api/profiles/switch, header dropdown)
-- [x] Configuration panel (GET/PUT /api/config — change provider, API key, auth token from Settings)
-- [x] SMS configuration panel (GET/PUT /api/sms — Twilio setup from Settings)
+- [x] Configuration panel (GET/PUT /api/config -change provider, API key, auth token from Settings)
+- [x] SMS configuration panel (GET/PUT /api/sms -Twilio setup from Settings)
 - [x] Doctor hint field (every diagnostic check includes actionable hint string)
 - [x] Empty states with helpful guidance on all tabs (approvals, receipts, audit, history, analytics, policy, MCP)
 - [x] Per-task model override (deep-clone profile, never persist)
@@ -117,7 +117,7 @@ A safe-by-default local AI agent that runs Claude locally, gates every action th
 - [x] 20+ new tests (server-api.test.js + doctor hint tests)
 - [x] Zero new npm dependencies
 
-**Phase 8: Conversation Experience — "Talk to the Claw"** ✓
+**Phase 8: Conversation Experience -"Talk to the Claw"** ✓
 - [x] Theme toggle that actually works (CSS data-theme selectors + applyTheme JS)
 - [x] Conversation UI (renderMarkdown zero-dep renderer, chat bubbles, live-updating agent text)
 - [x] Better history transcript (chronological interleaved messages + tool calls with markdown)
@@ -145,7 +145,7 @@ A safe-by-default local AI agent that runs Claude locally, gates every action th
 - [x] 352 tests across 21 files (scheduler: 25, policy-advanced: 20, server-api: +12)
 - [x] Zero new npm dependencies
 
-**Phase 10: Fort Knox — Security Sweep & Beta Polish** ✓
+**Phase 10: Fort Knox -Security Sweep & Beta Polish** ✓
 - [x] Input validation & security helpers (src/validate.js: assertString, assertIn, safeRegex, redactSecrets)
 - [x] ReDoS protection in policy.js (safeRegex wrapper for user-supplied regex patterns)
 - [x] Secrets redaction in SSE output (agent.js + server.js task stream)

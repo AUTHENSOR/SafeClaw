@@ -90,7 +90,7 @@ export class AuthensorClient {
         }
         return data;
       } catch (err) {
-        // Network errors — retry if transient
+        // Network errors -retry if transient
         if (attempt < retries && isRetryable(err, null)) {
           clearTimeout(timeoutId);
           await sleep(getBackoffMs(attempt, null));

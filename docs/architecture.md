@@ -32,7 +32,7 @@ Only action metadata:
 
 ## What stays local
 
-- Your `ANTHROPIC_API_KEY` — resolved by the SDK, never sent to Authensor
+- Your `ANTHROPIC_API_KEY` -resolved by the SDK, never sent to Authensor
 - Your files and filesystem
 - Tool execution output
 - The agent conversation
@@ -43,7 +43,7 @@ Only action metadata:
 2. The Claude Agent SDK runs locally, decides to use tools.
 3. Each tool call hits the `PreToolUse` hook in `gateway.js`.
 4. The classifier maps the tool to an action type and sanitized resource.
-5. Safe reads (`safe.read.*`) are allowed locally — no network call.
+5. Safe reads (`safe.read.*`) are allowed locally -no network call.
 6. Everything else is sent to `POST /evaluate` on the Authensor control plane.
 7. The control plane evaluates the action against your active policy.
 8. Allow → tool executes. Deny → tool blocked. Require approval → agent waits.
@@ -59,7 +59,7 @@ Each `installId` has its own policy and approval stream. Use profiles to separat
 | Module | Purpose |
 |--------|---------|
 | `agent.js` | Runs the Claude Agent SDK with gateway hook |
-| `gateway.js` | PreToolUse hook — intercepts tools, calls Authensor |
+| `gateway.js` | PreToolUse hook -intercepts tools, calls Authensor |
 | `classifier.js` | Maps tool names to action types, sanitizes secrets |
 | `authensor.js` | HTTP client for the Authensor control plane |
 | `cli.js` | CLI commands (init, run, approvals, policy, etc.) |

@@ -48,13 +48,13 @@ If the Authensor Apps Script backend is set up, approval emails with signed link
 ## What should require approval
 
 The default policy requires approval for:
-- `filesystem.write` — file writes and edits
-- `code.exec` — bash commands
-- `network.http` — HTTP requests
-- `network.search` — web searches
-- `secrets.*` — secret access
-- `payments.*` — payment operations
-- `mcp.*` — MCP tool calls
+- `filesystem.write` -file writes and edits
+- `code.exec` -bash commands
+- `network.http` -HTTP requests
+- `network.search` -web searches
+- `secrets.*` -secret access
+- `payments.*` -payment operations
+- `mcp.*` -MCP tool calls
 
 ## Timeout
 

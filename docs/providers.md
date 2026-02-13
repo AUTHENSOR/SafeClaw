@@ -5,7 +5,7 @@ SafeClaw currently uses the Claude Agent SDK, which calls the Anthropic API dire
 ## How keys work
 
 - Your `ANTHROPIC_API_KEY` is set as an environment variable
-- The Claude Agent SDK reads it directly — SafeClaw never touches it
+- The Claude Agent SDK reads it directly -SafeClaw never touches it
 - The key is never sent to Authensor or any other service
 - Only action descriptions (tool name + sanitized resource) go to Authensor for policy checks
 
@@ -26,4 +26,4 @@ safeclaw init --api-key-env MY_CLAUDE_KEY
 
 ## Multi-provider support (planned)
 
-Future phases will support additional providers (OpenAI, etc.) via a custom agent loop. The gateway and classifier modules are provider-agnostic — they work with any tool call regardless of which model generated it.
+Future phases will support additional providers (OpenAI, etc.) via a custom agent loop. The gateway and classifier modules are provider-agnostic -they work with any tool call regardless of which model generated it.

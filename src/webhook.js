@@ -1,4 +1,4 @@
-// Webhook notifications — fire-and-forget POST to configured URL.
+// Webhook notifications -fire-and-forget POST to configured URL.
 // Supports Slack, Discord, and generic JSON formats.
 // 2 retries with 2s delay on 5xx/network errors.
 

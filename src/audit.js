@@ -1,6 +1,6 @@
 // Append-only local audit ledger with SHA-256 hash chain.
 // Every gateway decision is logged to ~/.safeclaw/audit.jsonl.
-// Works offline — no dependency on Authensor control plane.
+// Works offline -no dependency on Authensor control plane.
 
 import fs from 'fs';
 import path from 'path';
@@ -134,7 +134,7 @@ export function verifyAuditIntegrity(auditPath) {
     }
 
     if (!entry.prevHash) {
-      // Pre-chain entry — skip verification but update prevLineHash for next
+      // Pre-chain entry -skip verification but update prevLineHash for next
       prevLineHash = sha256(lines[i]);
       continue;
     }

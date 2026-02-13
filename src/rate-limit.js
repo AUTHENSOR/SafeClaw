@@ -1,7 +1,7 @@
 // In-memory sliding window rate limiter.
-// No disk persistence needed — state resets on server restart.
+// No disk persistence needed -state resets on server restart.
 
-/** Map<key, number[]> — stores timestamps of requests within each window */
+/** Map<key, number[]> -stores timestamps of requests within each window */
 const windows = new Map();
 
 /**

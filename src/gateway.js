@@ -1,5 +1,5 @@
 // PreToolUse hook that gates tool execution through the Authensor control plane.
-// Only action descriptions leave the machine — never API keys or secrets.
+// Only action descriptions leave the machine -never API keys or secrets.
 // If the control plane is unreachable, fails closed (deny all).
 
 import { classify, isSafeRead } from './classifier.js';
@@ -75,7 +75,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
       });
     }
 
-    // Build the Authensor action envelope — only metadata, never keys
+    // Build the Authensor action envelope -only metadata, never keys
     const envelope = {
       action: {
         type: actionType,
@@ -107,7 +107,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
           }
         }
       } catch {
-        // Settings/cache read failure — continue to deny
+        // Settings/cache read failure -continue to deny
       }
 
       // Fail closed: control plane unreachable → deny everything
@@ -215,7 +215,7 @@ async function pollForApproval(client, receiptId, timeoutSeconds, signal, action
         return deny(`Approval expired (receipt: ${receiptId})`);
       }
 
-      // Still pending — continue polling
+      // Still pending -continue polling
     } catch (err) {
       // Transient failure during poll: log and retry
       process.stderr.write(`[SafeClaw] Poll error: ${err.message}. Retrying...\n`);

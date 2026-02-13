@@ -1,6 +1,6 @@
 {
   "name": "@authensor/safeclaw",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "type": "module",
   "description": "Safe-by-default AI agent. Gates every action through Authensor before it executes. Supports Claude and OpenAI.",
   "bin": {

@@ -1,5 +1,5 @@
 // Maps Claude Agent SDK tool names and inputs to Authensor action types.
-// Pure function — no side effects, no network calls.
+// Pure function -no side effects, no network calls.
 // Only action.type and action.resource leave the machine.
 
 const TOOL_MAP = {
@@ -24,7 +24,7 @@ const TOOL_MAP = {
   TaskStop:          'code.exec.kill',
 };
 
-// Patterns that indicate secrets — stripped before anything leaves the machine
+// Patterns that indicate secrets -stripped before anything leaves the machine
 const SECRET_PATTERNS = [
   /sk-ant-[a-zA-Z0-9\-_]{3,}/g,            // Anthropic keys (match first, more specific)
   /sk-[a-zA-Z0-9\-_]{6,}/g,                // OpenAI / generic sk- keys
@@ -54,7 +54,7 @@ export function sanitize(value) {
 
 // ── Risk signal detection ──
 // Advisory tags that indicate *why* a command is suspicious.
-// These never change policy decisions — they're metadata for the dashboard.
+// These never change policy decisions -they're metadata for the dashboard.
 
 const CREDENTIAL_PATHS = [
   '.aws/credentials', '.aws/config',

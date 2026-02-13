@@ -1,84 +1,78 @@
 # SafeClaw
 
-A safe-by-default AI agent. Plug in your API key (Claude or OpenAI), run tasks locally, and SafeClaw gates every action through [Authensor](https://github.com/AUTHENSOR) before it executes. Your API keys never leave your machine.
+**AI agents that ask before they act.**
 
-**Zero npm dependencies** beyond the Claude Agent SDK.
+SafeClaw intercepts every action your AI agent tries to take (file writes, shell commands, network requests) and checks it against a safety policy before it executes. If something looks risky, you get asked first. Nothing runs without your say-so.
+
+Works with **Claude** and **OpenAI**. Open-source client. Free tier included.
+
+![SafeClaw dashboard](docs/dashboard.png)
+
+## Install
+
+```bash
+npx @authensor/safeclaw
+```
+
+Your browser opens. A wizard walks you through everything: pick your AI provider, paste your API key, and you're running.
+
+> **Need Node.js?** Download it at [nodejs.org](https://nodejs.org/) (v20+). That's the only prerequisite.
+
+### Other install options
+
+**GUI (no terminal):** [Download the release](https://github.com/AUTHENSOR/SafeClaw/releases), extract, double-click the launcher.
+
+**Clone and run:**
+```bash
+git clone https://github.com/AUTHENSOR/SafeClaw.git && cd SafeClaw
+npm install && npm start
+```
 
 ## How it works
 
+Every tool call your AI agent makes goes through SafeClaw's gateway before it executes:
+
 ```
-Your machine (local):
-  safeclaw run "task"
-    → Agent runs locally (Claude SDK or OpenAI custom loop)
-    → Every tool call is intercepted before execution
-    → Action description sent to Authensor (never your keys)
-    → Authensor returns: allow / deny / require_approval
-    → If approval required: you get notified, agent waits for you
-```
-
-**What leaves your machine:** `"filesystem.write /tmp/output.txt"` (action metadata only)
-**What stays local:** Your API keys, your files, your secrets
-
-## Quickstart (GUI — no terminal needed)
-
-1. [Download the latest release](https://github.com/AUTHENSOR/SafeClaw/releases) zip
-2. Extract the folder
-3. **macOS**: double-click `SafeClaw.command` — **Windows**: double-click `SafeClaw.bat`
-4. The dashboard opens in your browser with a setup wizard
-
-That's it. The launcher checks for Node.js, installs dependencies on first run, and starts everything automatically.
-
-> **Prerequisite**: [Node.js 20+](https://nodejs.org/) must be installed. The launcher will open the download page for you if it's missing.
-
-### CLI quickstart
-
-```bash
-git clone https://github.com/AUTHENSOR/SafeClaw.git && cd SafeClaw
-npm install && npm link
-safeclaw
+You give the agent a task
+  → Agent decides to take an action (write a file, run a command, etc.)
+  → SafeClaw intercepts it
+  → Checks it against your policy: allow / deny / require approval
+  → If approval needed: you get notified, agent waits for your decision
+  → Action only runs after you approve
 ```
 
-A browser opens with the setup wizard. You need three things:
-1. Your **AI provider** — Claude (Anthropic) or OpenAI (GPT-4o)
-2. Your **API key** (stored locally in `~/.safeclaw/.env`, chmod 600, never sent anywhere)
-3. Your **Authensor token** (get one at https://forms.gle/QdfeWAr2G4pc8GxQA — or click "Get a free demo token" in the wizard)
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-safeclaw init --auth-token <your-authensor-token>
-safeclaw policy apply
-safeclaw run "Summarize this document"
-```
+**What leaves your machine:** Action metadata only (e.g., `"filesystem.write /tmp/output.txt"`)
+**What stays local:** Your API keys, your files, your data. Always.
 
 ## Features
 
-- **Multi-provider** — Claude (Anthropic SDK) and OpenAI (GPT-4o, custom loop)
-- **Browser dashboard** — setup wizard, task runner, approval center, analytics, policy editor, settings
-- **Policy engine** — deny-by-default rules, visual editor, versioning, rollback, dry-run simulation, time-based rules
-- **Audit ledger** — append-only JSONL with SHA-256 hash chain, tamper detection via `audit verify`
-- **Analytics** — cost tracking, approval metrics, tool usage, MCP server breakdown, CSV/JSON export
-- **Budget controls** — spending caps (daily/weekly/monthly) with warn/require_approval/block actions
-- **Scheduler** — cron-based recurring tasks with quiet hours
-- **Container mode** — Docker/Podman sandboxed execution with filesystem isolation
-- **Mobile PWA** — installable, responsive, swipe-to-approve
-- **SMS notifications** — Twilio integration for approval alerts
-- **Webhooks** — Slack, Discord, and generic HTTP notifications
-- **Offline cache** — cached allow decisions for Authensor downtime (fail-safe: denies never cached)
-- **Workspace scoping** — project boundary detection, path restriction enforcement
-- **Risk signals** — advisory badges on approvals for obfuscated execution, credential access, pipe-to-external, destructive commands, and persistence mechanisms
+- **Multi-provider:** Claude (Anthropic SDK) and OpenAI (GPT-4o, custom loop)
+- **Browser dashboard:** setup wizard, task runner, approval center, analytics, policy editor, settings
+- **Policy engine:** deny-by-default rules, visual editor, versioning, rollback, dry-run simulation, time-based rules
+- **Audit ledger:** append-only JSONL with SHA-256 hash chain, tamper detection via `audit verify`
+- **Analytics:** cost tracking, approval metrics, tool usage, MCP server breakdown, CSV/JSON export
+- **Budget controls:** spending caps (daily/weekly/monthly) with warn/require_approval/block actions
+- **Scheduler:** cron-based recurring tasks with quiet hours
+- **Container mode:** Docker/Podman sandboxed execution with filesystem isolation
+- **Mobile PWA:** installable, responsive, swipe-to-approve
+- **SMS notifications:** Twilio integration for approval alerts
+- **Webhooks:** Slack, Discord, and generic HTTP notifications
+- **Offline cache:** cached allow decisions for Authensor downtime (fail-safe: denies never cached)
+- **Workspace scoping:** project boundary detection, path restriction enforcement
+- **Risk signals:** advisory badges on approvals for obfuscated execution, credential access, pipe-to-external, destructive commands, and persistence mechanisms
 
 ## Security model
 
-- **Deny by default** — unknown actions are blocked
-- **CSRF protection** — all write endpoints require `X-Requested-With: SafeClaw` header
-- **ReDoS protection** — user-supplied regex patterns in policy rules validated for nested quantifiers before execution
-- **Secrets redaction** — API keys stripped from SSE output before reaching the browser
-- **File permissions** — all sensitive files written with mode 0o600
-- **Rate limiting** — sliding window limits on all write API endpoints
-- **Fail closed** — if Authensor is unreachable and no cached allow exists, actions are denied
-- **Local pre-filter** — `safe.read.*` tools (Read, Glob, Grep, TodoWrite, AskUserQuestion, Skill, TaskOutput) are allowed locally without a control plane call. All other tools always go through Authensor
-- **Security headers** — CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, X-XSS-Protection
-- **Audit integrity** — SHA-256 hash chain on every audit entry, verifiable via `safeclaw audit verify`
+- **Deny by default:** unknown actions are blocked
+- **CSRF protection:** all write endpoints require `X-Requested-With: SafeClaw` header
+- **ReDoS protection:** user-supplied regex patterns in policy rules validated for nested quantifiers before execution
+- **Secrets redaction:** API keys stripped from SSE output before reaching the browser
+- **File permissions:** all sensitive files written with mode 0o600
+- **Rate limiting:** sliding window limits on all write API endpoints
+- **Fail closed:** if Authensor is unreachable and no cached allow exists, actions are denied
+- **Local pre-filter:** `safe.read.*` tools (Read, Glob, Grep, TodoWrite, AskUserQuestion, Skill, TaskOutput) are allowed locally without a control plane call. All other tools always go through Authensor
+- **Security headers:** CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, X-XSS-Protection
+- **Audit integrity:** SHA-256 hash chain on every audit entry, verifiable via `safeclaw audit verify`
 
 ## Default policy
 
@@ -90,7 +84,7 @@ safeclaw run "Summarize this document"
 | `network.*` | Require approval | HTTP requests, web search |
 | `secrets.*` | Require approval | Access secrets |
 | `mcp.*` | Require approval | MCP tool calls |
-| Everything else | Deny | — |
+| Everything else | Deny | - |
 
 ## Commands
 
@@ -184,10 +178,9 @@ All config is stored in `~/.safeclaw/`:
 
 ## What stays private
 
-SafeClaw uses Authensor's hosted control plane for policy evaluation.
-The risk scoring engine and policy logic are server-side — your data stays local.
+SafeClaw's client is fully open source: the agent, classifier, policy engine, dashboard, and all 446 tests are right here on GitHub. The Authensor control plane is a hosted service that evaluates action metadata against your policy. It only sees what the agent wants to do (e.g., "write a file to /tmp"), never your API keys, file contents, or data.
 
-For the developer SDK, visit [authensor.com](https://authensor.com).
+If the control plane is unreachable, SafeClaw fails closed. Every action is denied. Nothing slips through.
 
 ## License
 

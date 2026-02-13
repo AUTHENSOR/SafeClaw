@@ -1,5 +1,5 @@
 // Local agent runner using Claude Agent SDK with Authensor gateway hook.
-// The Anthropic API key is resolved from the environment by the SDK — we never touch it.
+// The Anthropic API key is resolved from the environment by the SDK -we never touch it.
 // Only action descriptions leave the machine via the gateway hook.
 
 import { query } from '@anthropic-ai/claude-agent-sdk';
@@ -13,7 +13,7 @@ import { redactSecrets } from './validate.js';
  * @param {{ task: string, profile: object, verbose?: boolean, emitter?: EventEmitter, taskId?: string }} opts
  */
 export async function runAgent({ task, profile, verbose = false, emitter = null, taskId = null }) {
-  // Provider dispatch — OpenAI uses a custom agent loop
+  // Provider dispatch -OpenAI uses a custom agent loop
   if (profile.provider?.name === 'openai') {
     const { runOpenAIAgent } = await import('./openai-agent.js');
     return runOpenAIAgent({ task, profile, verbose, emitter, taskId });
@@ -38,7 +38,7 @@ export async function runAgent({ task, profile, verbose = false, emitter = null,
     workspaceConfig: ws?.config || null,
   });
 
-  // Standard Claude Code toolset — all gated by the gateway hook
+  // Standard Claude Code toolset -all gated by the gateway hook
   const allowedTools = [
     'Read', 'Write', 'Edit', 'Bash', 'Glob', 'Grep',
     'WebFetch', 'WebSearch', 'Task', 'TodoWrite',
@@ -50,7 +50,7 @@ export async function runAgent({ task, profile, verbose = false, emitter = null,
   const options = {
     allowedTools,
     permissionMode: 'bypassPermissions', // gateway hook IS the permission system
-    allowDangerouslySkipPermissions: true, // required with bypassPermissions — safety is handled by the gateway hook
+    allowDangerouslySkipPermissions: true, // required with bypassPermissions -safety is handled by the gateway hook
     hooks: {
       PreToolUse: [
         {

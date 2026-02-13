@@ -17,7 +17,7 @@ npm link
 
 ## 2. Set your API key
 
-Your Anthropic key stays local — it's used by the Claude Agent SDK directly on your machine and is never sent to Authensor.
+Your Anthropic key stays local -it's used by the Claude Agent SDK directly on your machine and is never sent to Authensor.
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -45,7 +45,7 @@ This uploads your local policy to the Authensor control plane and activates it.
 safeclaw run "Summarize this document"
 ```
 
-The agent runs locally. Read operations execute immediately. Write, network, and exec operations are checked against your policy — risky ones pause and wait for your approval.
+The agent runs locally. Read operations execute immediately. Write, network, and exec operations are checked against your policy -risky ones pause and wait for your approval.
 
 ## 6. Approve risky actions
 
@@ -74,11 +74,11 @@ safeclaw approvals
 
 Edit `~/.safeclaw/policies/default.json` or copy a template from `policies/`:
 
-- `policies/default-safe.json` — recommended (reads allowed, writes need approval)
-- `policies/high-risk-approval.json` — everything non-read needs approval
-- `policies/sandbox-readonly.json` — read-only with approval for all writes
-- `policies/strict-deny.json` — deny everything (nothing runs)
-- `policies/allowlist.example.json` — allow specific domains only
+- `policies/default-safe.json` -recommended (reads allowed, writes need approval)
+- `policies/high-risk-approval.json` -everything non-read needs approval
+- `policies/sandbox-readonly.json` -read-only with approval for all writes
+- `policies/strict-deny.json` -deny everything (nothing runs)
+- `policies/allowlist.example.json` -allow specific domains only
 
 After editing, re-apply: `safeclaw policy apply`
 

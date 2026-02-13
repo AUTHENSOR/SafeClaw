@@ -1,4 +1,4 @@
-// Scheduler module — cron-based recurring tasks stored in ~/.safeclaw/schedules.json.
+// Scheduler module -cron-based recurring tasks stored in ~/.safeclaw/schedules.json.
 // Zero external deps. Minimal cron parser supports: *, */N, literal numbers, ranges (1-5), lists (1,3,5).
 
 import fs from 'fs';

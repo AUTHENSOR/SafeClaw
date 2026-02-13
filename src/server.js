@@ -1,4 +1,4 @@
-// Dashboard HTTP server — localhost only, zero dependencies.
+// Dashboard HTTP server -localhost only, zero dependencies.
 // Serves the dashboard SPA and provides API routes for setup, task running,
 // approvals, and receipts. Same security model as Jupyter/VS Code.
 
@@ -136,7 +136,7 @@ function setSecurityHeaders(res) {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'no-referrer');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';");
 }
 
 // --- Route handler ---
@@ -478,7 +478,7 @@ async function handleTaskStart(req, res) {
 }
 
 function startTaskExecution(taskId, task, container, workspace, model, profile) {
-  // Budget enforcement — check before starting task
+  // Budget enforcement -check before starting task
   try {
     const budgetStatus = checkBudget();
     if (budgetStatus.exceeded) {
@@ -509,7 +509,7 @@ function startTaskExecution(taskId, task, container, workspace, model, profile) 
 
   activeTask = { id: taskId, status: 'running', startedAt: new Date().toISOString(), abortController };
 
-  // Session accumulator — records transcript for history
+  // Session accumulator -records transcript for history
   const session = {
     id: taskId,
     task,
@@ -770,7 +770,7 @@ async function handleProvisionDemo(req, res) {
 
     const result = await client.provisionDemo(installId);
     if (!result) {
-      // Endpoint not yet available — return fallback info
+      // Endpoint not yet available -return fallback info
       return json(res, {
         available: false,
         formUrl: 'https://forms.gle/QdfeWAr2G4pc8GxQA',
@@ -931,7 +931,7 @@ async function handlePolicyLoadTemplate(req, res) {
     if (!body.template) throw new ValidationError('template filename is required');
     const templatesDir = path.join(__dirname, '..', 'policies');
     const templatePath = path.join(templatesDir, body.template);
-    // Path traversal prevention — resolved path must stay within templates directory
+    // Path traversal prevention -resolved path must stay within templates directory
     if (!path.resolve(templatePath).startsWith(path.resolve(templatesDir) + path.sep) &&
         path.resolve(templatePath) !== path.resolve(templatesDir)) {
       return errorJson(res, 'Forbidden', 403);
@@ -1491,7 +1491,7 @@ export async function startServer({ open = true } = {}) {
   process.on('SIGTERM', shutdown);
   process.on('SIGINT', shutdown);
 
-  // Expose cleanup for tests — removes signal listeners when server is closed externally
+  // Expose cleanup for tests -removes signal listeners when server is closed externally
   server.on('close', () => {
     process.removeListener('SIGTERM', shutdown);
     process.removeListener('SIGINT', shutdown);

@@ -356,7 +356,7 @@ describe('Security: oversized payload rejection', () => {
         });
       });
       req.on('error', (err) => {
-        // Connection may be destroyed by server — that's the expected behavior
+        // Connection may be destroyed by server -that's the expected behavior
         resolve({ status: 0, text: err.message });
       });
       req.write(largeBody);

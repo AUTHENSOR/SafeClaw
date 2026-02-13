@@ -1,5 +1,5 @@
 // Custom agent loop for OpenAI/GPT models.
-// Uses raw fetch() — zero new dependencies.
+// Uses raw fetch() -zero new dependencies.
 // Routes every tool call through the same Authensor gateway hook as Claude.
 
 import fs from 'fs';
@@ -473,7 +473,7 @@ export async function runOpenAIAgent({ task, profile, verbose = false, emitter =
 
         // Check for finish
         if (choice.finish_reason === 'stop' || choice.finish_reason === 'length') {
-          // Agent is done — no tool calls, just text
+          // Agent is done -no tool calls, just text
           if (contentText) process.stdout.write('\n');
           if (verbose) {
             process.stderr.write(`[SafeClaw] OpenAI agent completed (${turn + 1} turns)\n`);
@@ -544,7 +544,7 @@ export async function runOpenAIAgent({ task, profile, verbose = false, emitter =
         const reason = hookResult?.hookSpecificOutput?.permissionDecisionReason || '';
 
         if (decision === 'deny') {
-          process.stderr.write(`[SafeClaw] Denied: ${classifierName} — ${reason}\n`);
+          process.stderr.write(`[SafeClaw] Denied: ${classifierName} -${reason}\n`);
           messages.push({
             role: 'tool',
             tool_call_id: tc.id,

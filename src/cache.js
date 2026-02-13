@@ -1,4 +1,4 @@
-// Offline decision cache — stores recent allow decisions in memory + disk.
+// Offline decision cache -stores recent allow decisions in memory + disk.
 // When Authensor control plane is unreachable and cache is enabled,
 // cached allows let the agent continue. Denies are never cached (fail-safe).
 
@@ -30,7 +30,7 @@ function loadFromDisk(cachePath) {
       return memCache;
     }
   } catch {
-    // Corrupt file — start fresh
+    // Corrupt file -start fresh
   }
   memCache = {};
   return memCache;
@@ -95,7 +95,7 @@ export function clearCache(cachePath) {
 }
 
 /**
- * Reset in-memory cache (for testing — forces disk reload on next access).
+ * Reset in-memory cache (for testing -forces disk reload on next access).
  */
 export function _resetMemCache() {
   memCache = null;

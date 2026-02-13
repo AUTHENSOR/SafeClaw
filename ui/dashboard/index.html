@@ -14,7 +14,7 @@
   <meta name="theme-color" content="#171e19" />
 </head>
 <body>
-  <!-- SVG icon sprite — hidden, referenced via <svg class="icon"><use href="#sc-xxx"/></svg> -->
+  <!-- SVG icon sprite - hidden, referenced via <svg class="icon"><use href="#sc-xxx"/></svg> -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
     <symbol id="sc-paw" viewBox="0 0 24 24">
       <ellipse cx="12" cy="17" rx="4.5" ry="3.5" fill="currentColor"/>
@@ -150,7 +150,7 @@
       <!-- Step 3: API key -->
       <div class="wizard-step hidden" data-step="3">
         <h2 id="key-step-title">Step 2 of 4: Anthropic API key</h2>
-        <p>This key is saved securely on your machine and never shared with anyone &mdash; not even Authensor.</p>
+        <p>This key is saved securely on your machine and never shared with anyone, not even Authensor.</p>
         <div class="input-group">
           <label for="input-api-key" id="key-label">API Key</label>
           <input type="password" id="input-api-key" placeholder="sk-ant-..." autocomplete="off" />
@@ -158,9 +158,8 @@
         <div id="key-help" class="wizard-help">
           <p class="muted"><strong>How to get your key:</strong></p>
           <ol class="muted">
-            <li>Open <a id="key-link" href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic Console</a> (sign up if you don't have an account)</li>
-            <li id="key-help-step2">Go to <strong>API Keys</strong> in the left sidebar</li>
-            <li>Click <strong>Create Key</strong>, give it any name, and copy it</li>
+            <li>Open <a id="key-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com/settings/keys</a> <span id="key-help-signup">(create a free account if you don't have one)</span></li>
+            <li id="key-help-step2">Click <strong>Create Key</strong>, give it any name, and copy it</li>
             <li>Paste it above</li>
           </ol>
         </div>
@@ -173,16 +172,17 @@
       <!-- Step 4: Authensor token -->
       <div class="wizard-step hidden" data-step="4">
         <h2>Step 3 of 4: Authensor token</h2>
-        <p>Authensor is the safety layer that checks every action your AI agent takes. It only sees <em>what</em> the agent wants to do (like &quot;write a file&quot;) &mdash; never your keys, passwords, or file contents.</p>
+        <p>Authensor is the safety layer that checks every action your AI agent takes. It only sees <em>what</em> the agent wants to do (like &quot;write a file&quot;), never your keys, passwords, or file contents.</p>
         <div style="margin: 12px 0;">
-          <button class="btn btn-primary" id="btn-demo-token" onclick="requestDemoToken()">Get a free demo token</button>
+          <button class="btn btn-primary" id="btn-demo-token" onclick="requestDemoToken()">Request a free token</button>
           <span id="demo-token-status" class="muted" style="margin-left: 8px;"></span>
         </div>
+        <p class="muted" id="demo-token-help" style="margin-bottom: 8px;">This opens a short form. You'll get a token by email within a few minutes. Come back here and paste it below. Free tokens last 7 days. You can request a new one anytime.</p>
         <div class="input-group">
           <label for="input-auth-token">Authensor Token</label>
           <input type="password" id="input-auth-token" placeholder="authensor_..." autocomplete="off" />
         </div>
-        <p class="muted">Already have a token? Paste it above. Or <a href="https://forms.gle/QdfeWAr2G4pc8GxQA" target="_blank" rel="noopener">request one manually</a>.</p>
+        <p class="muted">Already have a token? Paste it above. To reopen this page later, run <code>npx @authensor/safeclaw</code> again.</p>
         <div class="wizard-buttons">
           <button class="btn btn-secondary" onclick="wizardBack()">Back</button>
           <button class="btn btn-primary" onclick="wizardNext()">Next</button>
@@ -202,6 +202,7 @@
         <h2>You're all set!</h2>
         <p>SafeClaw is configured and ready. Your default deny-by-default policy is active.</p>
         <div id="setup-summary" class="setup-summary"></div>
+        <p class="muted" style="margin-top: 12px;">To reopen this dashboard anytime, run <code>npx @authensor/safeclaw</code> in your terminal.</p>
         <button class="btn btn-primary btn-lg" onclick="wizardDone()">Go to Dashboard</button>
       </div>
     </div>
@@ -242,9 +243,9 @@
             </div>
             <div class="flow-arrow"><svg class="icon"><use href="#sc-arrow"/></svg></div>
             <div class="flow-step flow-step-outcomes">
-              <div class="flow-outcome"><span class="flow-dot dot-allow"></span> Safe &#x2014; runs</div>
-              <div class="flow-outcome"><span class="flow-dot dot-approval"></span> Risky &#x2014; you decide</div>
-              <div class="flow-outcome"><span class="flow-dot dot-deny"></span> Dangerous &#x2014; blocked</div>
+              <div class="flow-outcome"><span class="flow-dot dot-allow"></span> Safe:runs</div>
+              <div class="flow-outcome"><span class="flow-dot dot-approval"></span> Risky:you decide</div>
+              <div class="flow-outcome"><span class="flow-dot dot-deny"></span> Dangerous:blocked</div>
             </div>
           </div>
           <p class="muted" style="margin-top: 16px; margin-bottom: 16px;">Your keys and files never leave your machine. Only action descriptions are checked.</p>
@@ -321,9 +322,9 @@
                 <button class="container-info-close" onclick="dismissContainerInfo()" title="Dismiss"><svg class="icon"><use href="#sc-x"/></svg></button>
                 <div class="container-info-text">
                   <strong>What is sandboxed mode?</strong>
-                  <p>Runs the AI agent inside an isolated container (like a virtual machine) so it can <em>only</em> access files in one folder. Nothing outside that folder can be read, changed, or deleted &mdash; even if the agent tries.</p>
+                  <p>Runs the AI agent inside an isolated container (like a virtual machine) so it can <em>only</em> access files in one folder. Nothing outside that folder can be read, changed, or deleted, even if the agent tries.</p>
                   <p><strong>When to use it:</strong> When running untrusted tasks, working with sensitive projects, or anytime you want an extra layer of protection.</p>
-                  <p><strong>What goes in the project folder:</strong> Everything the agent needs to do its job. Source code, config files, data files &mdash; if it's not in this folder, the agent can't see it. Your home directory, SSH keys, other projects, and system files are all completely off-limits. Think of it as handing someone a locked room with only the files you choose inside.</p>
+                  <p><strong>What goes in the project folder:</strong> Everything the agent needs to do its job. Source code, config files, data files. If it's not in this folder, the agent can't see it. Your home directory, SSH keys, other projects, and system files are all completely off-limits. Think of it as handing someone a locked room with only the files you choose inside.</p>
                   <p><strong>Setup:</strong> Requires <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Docker Desktop</a> running on your machine. Install it, make sure it's open, and you're good to go.</p>
                 </div>
                 <div class="task-option-group" id="task-workspace-group">

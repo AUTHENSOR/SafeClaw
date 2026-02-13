@@ -93,7 +93,7 @@ export function loadPolicyVersion(policyPath, version) {
 }
 
 /**
- * Rollback to a specific version — copies backup to active (creating a new version).
+ * Rollback to a specific version -copies backup to active (creating a new version).
  */
 export function rollbackPolicy(policyPath, version) {
   const old = loadPolicyVersion(policyPath, version);

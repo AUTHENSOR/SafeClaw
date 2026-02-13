@@ -1,4 +1,4 @@
-// Analytics module — computes cost, approval, and tool usage metrics
+// Analytics module -computes cost, approval, and tool usage metrics
 // from existing audit.jsonl and session files. No new data storage needed.
 
 import { readEntries } from './audit.js';

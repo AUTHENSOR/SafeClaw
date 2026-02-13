@@ -113,7 +113,7 @@ describe('nextCronRun', () => {
   });
 
   it('returns null for impossible cron (Feb 31)', () => {
-    // Month 2, dom 31 — never happens
+    // Month 2, dom 31 -never happens
     const next = nextCronRun('0 0 31 2 *', new Date('2026-01-01'));
     expect(next).toBeNull();
   });

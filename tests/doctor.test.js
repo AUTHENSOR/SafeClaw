@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 import { runDiagnostics } from '../src/doctor.js';
 
-// Doctor tests — note these test real system state, so results will vary.
+// Doctor tests -note these test real system state, so results will vary.
 // We verify the shape and basic logic of the checks.
 
 describe('runDiagnostics', () => {

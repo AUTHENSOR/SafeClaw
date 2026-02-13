@@ -4,13 +4,13 @@ SafeClaw is deny-by-default. The agent runs locally, and every tool call is inte
 
 ## Default posture
 
-- **Read-only actions are safe** — file reads, search, grep are allowed without approval
-- **File writes require approval** — Write, Edit, NotebookEdit
-- **Code execution requires approval** — Bash commands
-- **Network access requires approval** — HTTP requests, web search
-- **Secrets and payments require approval** — any access to secrets or payment APIs
-- **MCP tools require approval** — external tool integrations
-- **Unknown actions are denied** — anything not in a rule is blocked
+- **Read-only actions are safe** -file reads, search, grep are allowed without approval
+- **File writes require approval** -Write, Edit, NotebookEdit
+- **Code execution requires approval** -Bash commands
+- **Network access requires approval** -HTTP requests, web search
+- **Secrets and payments require approval** -any access to secrets or payment APIs
+- **MCP tools require approval** -external tool integrations
+- **Unknown actions are denied** -anything not in a rule is blocked
 
 ## How risk is determined
 

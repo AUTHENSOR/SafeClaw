@@ -11,10 +11,10 @@ safeclaw init [flags]
 ```
 
 Flags:
-- `--profile <name>` — profile name (default: `default`)
-- `--control-plane <url>` — Authensor control plane URL (default: `https://authensor-control-plane.onrender.com`)
-- `--auth-token <token>` — Authensor API token
-- `--api-key-env <var>` — environment variable for your Anthropic key (default: `ANTHROPIC_API_KEY`)
+- `--profile <name>` -profile name (default: `default`)
+- `--control-plane <url>` -Authensor control plane URL (default: `https://authensor-control-plane.onrender.com`)
+- `--auth-token <token>` -Authensor API token
+- `--api-key-env <var>` -environment variable for your Anthropic key (default: `ANTHROPIC_API_KEY`)
 
 ### run
 

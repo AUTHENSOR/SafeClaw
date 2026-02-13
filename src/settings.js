@@ -1,4 +1,4 @@
-// Global settings module — load, save, and validate ~/.safeclaw/settings.json.
+// Global settings module -load, save, and validate ~/.safeclaw/settings.json.
 // All Phase 5 features (cache, webhooks, analytics) read from this.
 
 import fs from 'fs';

@@ -102,7 +102,7 @@ export async function runDiagnostics() {
       message: auditResult.valid
         ? `${auditResult.totalEntries} entries, ${auditResult.chainedEntries} chained`
         : `Integrity check failed: ${auditResult.errors[0]}`,
-      hint: auditResult.valid ? null : 'Audit log may have been tampered with — check the Audit Log tab',
+      hint: auditResult.valid ? null : 'Audit log may have been tampered with -check the Audit Log tab',
     });
   } catch (err) {
     checks.push({ name: 'Audit log', status: 'warn', message: err.message, hint: 'Check that ~/.safeclaw/audit.jsonl exists' });

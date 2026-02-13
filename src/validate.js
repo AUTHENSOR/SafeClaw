@@ -1,4 +1,4 @@
-// Input validation and security helpers — zero dependencies.
+// Input validation and security helpers -zero dependencies.
 
 /**
  * Assert that a value is a non-empty string within a max length.
@@ -65,7 +65,7 @@ export function safeRegex(pattern) {
   return { valid: true, regex, error: null };
 }
 
-// Patterns for secret detection — mirrors classifier.js SECRET_PATTERNS.
+// Patterns for secret detection -mirrors classifier.js SECRET_PATTERNS.
 // Both files must cover the same secrets. This list is the superset used for
 // SSE output redaction (user-facing), so it uses prefix-preserving replacements.
 const SECRET_PATTERNS = [

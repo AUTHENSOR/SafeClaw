@@ -69,7 +69,7 @@ export function loadWorkspaceConfig(projectRoot) {
  * Check whether a file path is allowed by the workspace config.
  * Denied paths always win over allowed paths.
  * @param {string} filePath
- * @param {object} wsConfig  — { root, allowedPaths, deniedPaths }
+ * @param {object} wsConfig  -{ root, allowedPaths, deniedPaths }
  * @returns {boolean}
  */
 export function isPathAllowed(filePath, wsConfig) {
@@ -77,14 +77,14 @@ export function isPathAllowed(filePath, wsConfig) {
 
   const resolved = path.resolve(filePath);
 
-  // Check denied paths first — deny always wins
+  // Check denied paths first -deny always wins
   for (const denied of wsConfig.deniedPaths) {
     if (resolved === denied || resolved.startsWith(denied + path.sep)) {
       return false;
     }
   }
 
-  // Check allowed paths — must match at least one
+  // Check allowed paths -must match at least one
   for (const allowed of wsConfig.allowedPaths) {
     if (resolved === allowed || resolved.startsWith(allowed + path.sep)) {
       return true;

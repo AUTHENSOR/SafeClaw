@@ -329,7 +329,7 @@ async function main() {
     const task = taskArgs.join(' ').trim();
     if (!task) throw new Error('Usage: safeclaw run [--container] [--dry-run] "your task"');
 
-    // Verify the API key is available — it never leaves the machine
+    // Verify the API key is available -it never leaves the machine
     const keyEnv = profile.provider?.apiKeyEnv || 'ANTHROPIC_API_KEY';
     if (!process.env[keyEnv]) {
       const isOpenAI = profile.provider?.name === 'openai';
@@ -387,7 +387,7 @@ async function main() {
         }
       }
 
-      console.log('\n(Dry run complete — no agent started)');
+      console.log('\n(Dry run complete -no agent started)');
       return;
     }
 

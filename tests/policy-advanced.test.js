@@ -145,7 +145,7 @@ describe('filterActiveRules', () => {
     const tuesday = new Date('2026-02-10T12:00:00Z'); // Feb 10 2026 is a Tuesday
     expect(filterActiveRules(rules, tuesday)).toHaveLength(1);
 
-    // Sunday (day 0) — Feb 15 2026 is a Sunday
+    // Sunday (day 0) -Feb 15 2026 is a Sunday
     const sunday = new Date('2026-02-15T12:00:00Z');
     expect(filterActiveRules(rules, sunday)).toHaveLength(0);
   });

@@ -1,4 +1,4 @@
-// Structured JSON logger — zero dependencies.
+// Structured JSON logger -zero dependencies.
 // Writes to stderr so stdout remains clean for agent output.
 // Control level via SAFECLAW_LOG_LEVEL env var (debug, info, warn, error).
 

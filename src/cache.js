@@ -50,10 +50,10 @@ function saveToDisk(cachePath) {
  * @param {string} actionType
  * @param {string} resource
  * @param {string} outcome
- * @param {number} [ttlSeconds=3600]
+ * @param {number} [ttlSeconds=300]
  * @param {string} [cachePath]
  */
-export function cacheDecision(actionType, resource, outcome, ttlSeconds = 3600, cachePath) {
+export function cacheDecision(actionType, resource, outcome, ttlSeconds = 300, cachePath) {
   if (outcome !== 'allow') return;
   const cache = loadFromDisk(cachePath);
   const key = cacheKey(actionType, resource);

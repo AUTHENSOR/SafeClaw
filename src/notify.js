@@ -20,10 +20,10 @@ export function isNotifyConfigured() {
 /**
  * Send an SMS notification for an action requiring approval.
  *
- * @param {{ actionType: string, resource: string, receiptId: string, installId?: string }} opts
+ * @param {{ actionType: string, resource: string, receiptId: string, installId?: string, riskSignals?: string[] }} opts
  * @returns {Promise<boolean>} true if sent successfully
  */
-export async function sendApprovalSMS({ actionType, resource, receiptId, installId }) {
+export async function sendApprovalSMS({ actionType, resource, receiptId, installId, riskSignals = [] }) {
   if (!isNotifyConfigured()) return false;
 
   const sid = process.env.TWILIO_ACCOUNT_SID;
@@ -33,7 +33,10 @@ export async function sendApprovalSMS({ actionType, resource, receiptId, install
 
   // Truncate resource to keep SMS under 160 chars
   const shortResource = resource.length > 60 ? resource.slice(0, 57) + '...' : resource;
-  const body = `[SafeClaw] Approval needed:\n${actionType}\n${shortResource}\nReceipt: ${receiptId}`;
+  let body = `[SafeClaw] Approval needed:\n${actionType}\n${shortResource}\nReceipt: ${receiptId}`;
+  if (riskSignals.length > 0) {
+    body += `\nRisk: ${riskSignals.join(', ')}`;
+  }
 
   const url = `${TWILIO_API}/Accounts/${encodeURIComponent(sid)}/Messages.json`;
   const auth = Buffer.from(`${sid}:${token}`).toString('base64');

@@ -1064,6 +1064,21 @@ header#status-bar {
   color: var(--danger);
 }
 
+.badge-risk {
+  background: rgba(159, 141, 139, 0.15);
+  color: var(--taupe);
+  font-size: 10px;
+  padding: 2px 8px;
+  border: 1px solid rgba(159, 141, 139, 0.3);
+}
+
+.risk-signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
 /* ---------- Cards ---------- */
 
 .card {

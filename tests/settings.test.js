@@ -71,7 +71,7 @@ describe('validateSettings', () => {
       auditRetentionDays: 90,
       costTrackingEnabled: true,
       offlineCacheEnabled: false,
-      offlineCacheTtlSeconds: 3600,
+      offlineCacheTtlSeconds: 300,
       theme: 'auto',
       notifyChannels: { sms: true, webhook: { url: '', events: [] } },
     };

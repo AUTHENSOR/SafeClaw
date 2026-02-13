@@ -2,6 +2,23 @@
 
 All notable changes to SafeClaw are documented here.
 
+## [1.0.0-beta.1] — 2026-02-12
+
+### Added
+- **Risk signals** — non-blocking advisory badges on approval requests. Five signal types: `obfuscated_execution`, `pipe_to_external`, `credential_adjacent`, `broad_destructive`, `persistence_mechanism`
+- Risk signal detection in classifier (`detectRiskSignals`) with pattern matching for base64-decode-to-shell, pipe-to-curl/nc, credential file paths, destructive system commands, and persistence mechanisms (crontab, launchctl, systemctl, shell rc files)
+- Risk badges rendered in dashboard approval cards and SSE approval-waiting blocks (taupe `.badge-risk` styling)
+- Browser notifications prefixed with risk signal summary when signals present
+- SMS notifications (Twilio) include risk signal line when signals present
+- Webhook payloads include `riskSignals` array
+- Audit ledger entries include `riskSignals` array
+- 28 new tests (classifier risk signal detection + gateway flow-through), 446 total across 24 files
+
+### Changed
+- `classify()` return shape extended: `{ actionType, resource }` → `{ actionType, resource, riskSignals }`
+- Gateway hook threads `riskSignals` through all audit, SSE, SMS, and webhook paths
+- SW cache bumped to `v1.0.0-beta.11`
+
 ## [1.0.0-beta] — 2026-02-10
 
 ### Added

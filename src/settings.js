@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS = {
   auditRetentionDays: 90,
   costTrackingEnabled: true,
   offlineCacheEnabled: false,
-  offlineCacheTtlSeconds: 3600,
+  offlineCacheTtlSeconds: 300,
   theme: 'auto',
   browserNotifications: false,
   costBudget: { enabled: false, limitUsd: 10.00, period: 'daily', action: 'warn' },
@@ -88,8 +88,8 @@ export function validateSettings(s) {
       }
     }
   }
-  if (typeof s.offlineCacheTtlSeconds !== 'number' || s.offlineCacheTtlSeconds < 60 || s.offlineCacheTtlSeconds > 86400) {
-    errors.push('offlineCacheTtlSeconds must be a number between 60 and 86400');
+  if (typeof s.offlineCacheTtlSeconds !== 'number' || s.offlineCacheTtlSeconds < 60 || s.offlineCacheTtlSeconds > 300) {
+    errors.push('offlineCacheTtlSeconds must be a number between 60 and 300');
   }
   if (s.costBudget) {
     const b = s.costBudget;

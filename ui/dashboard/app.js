@@ -61,8 +61,9 @@ function showApprovalNotification(data) {
 
   var actionType = data.actionType || 'action';
   var resource = data.resource || '';
+  var riskPrefix = (data.riskSignals && data.riskSignals.length) ? 'Risk: ' + data.riskSignals.join(', ') + '\n' : '';
   var n = new Notification('SafeClaw — Approval Needed', {
-    body: actionType + ' on ' + resource,
+    body: riskPrefix + actionType + ' on ' + resource,
     tag: 'safeclaw-approval',
   });
   n.onclick = function() {
@@ -607,7 +608,13 @@ function connectTaskSSE(taskId) {
     var el = document.getElementById('output-content');
     var div = document.createElement('div');
     div.className = 'approval-waiting';
-    div.innerHTML = 'Waiting for approval: ' + escapeHtml(data.actionType) + ' on ' + escapeHtml(data.resource);
+    var riskHtml = '';
+    if (data.riskSignals && data.riskSignals.length) {
+      riskHtml = '<div class="risk-signals">' + data.riskSignals.map(function(s) {
+        return '<span class="badge badge-risk">' + escapeHtml(s) + '</span>';
+      }).join('') + '</div>';
+    }
+    div.innerHTML = 'Waiting for approval: ' + escapeHtml(data.actionType) + ' on ' + escapeHtml(data.resource) + riskHtml;
     el.appendChild(div);
     el.scrollTop = el.scrollHeight;
     refreshApprovals();
@@ -687,6 +694,14 @@ function renderApprovals(list) {
     var resource = a.resource || (a.envelope && a.envelope.action && a.envelope.action.resource) || '';
     var id = a.id || '';
 
+    var riskSignals = a.riskSignals || [];
+    var riskBadgesHtml = '';
+    if (riskSignals.length) {
+      riskBadgesHtml = '<div class="risk-signals">' + riskSignals.map(function(s) {
+        return '<span class="badge badge-risk">' + escapeHtml(s) + '</span>';
+      }).join('') + '</div>';
+    }
+
     var card = document.createElement('div');
     card.className = 'card';
     card.innerHTML =
@@ -696,6 +711,7 @@ function renderApprovals(list) {
       '<div class="card-resource">' +
       escapeHtml(resource) +
       '</div>' +
+      riskBadgesHtml +
       '<div class="card-id">' +
       escapeHtml(id) +
       '</div>' +
@@ -844,9 +860,9 @@ function renderMarkdown(text) {
   escaped = escaped.replace(/^### (.+)$/gm, '<h5>$1</h5>');
   escaped = escaped.replace(/^## (.+)$/gm, '<h4>$1</h4>');
   escaped = escaped.replace(/^# (.+)$/gm, '<h3>$1</h3>');
-  // Links (only allow http/https protocols)
+  // Links (only allow http/https protocols — no relative or fragment URLs)
   escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(_, text, url) {
-    if (/^https?:\/\//i.test(url) || url.startsWith('/') || url.startsWith('#')) {
+    if (/^https?:\/\//i.test(url)) {
       return '<a href="' + url + '" target="_blank" rel="noopener">' + text + '</a>';
     }
     return text;

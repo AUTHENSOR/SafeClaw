@@ -65,16 +65,22 @@ export function safeRegex(pattern) {
   return { valid: true, regex, error: null };
 }
 
-// Patterns for secret detection
+// Patterns for secret detection — mirrors classifier.js SECRET_PATTERNS.
+// Both files must cover the same secrets. This list is the superset used for
+// SSE output redaction (user-facing), so it uses prefix-preserving replacements.
 const SECRET_PATTERNS = [
-  // Anthropic API keys: sk-ant-... followed by base64-ish chars
-  { re: /sk-ant-[A-Za-z0-9_-]{10,}/g, replacement: 'sk-ant-[REDACTED]' },
-  // OpenAI API keys: sk- followed by 20+ chars including hyphens (but not sk-ant-)
-  { re: /sk-(?!ant-)[A-Za-z0-9_-]{20,}/g, replacement: 'sk-[REDACTED]' },
-  // Bearer tokens with sk- prefix
-  { re: /Bearer\s+sk-[^\s]+/g, replacement: 'Bearer [REDACTED]' },
-  // Environment variable assignments for known sensitive keys
+  { re: /sk-ant-[a-zA-Z0-9\-_]{3,}/g, replacement: 'sk-ant-[REDACTED]' },
+  { re: /sk-(?!ant-)[a-zA-Z0-9\-_]{6,}/g, replacement: 'sk-[REDACTED]' },
+  { re: /authensor_[a-zA-Z0-9_]{3,}/g, replacement: 'authensor_[REDACTED]' },
+  { re: /Bearer\s+[a-zA-Z0-9._\-]{6,}/gi, replacement: 'Bearer [REDACTED]' },
+  { re: /ghp_[a-zA-Z0-9]{6,}/g, replacement: 'ghp_[REDACTED]' },
+  { re: /gho_[a-zA-Z0-9]{6,}/g, replacement: 'gho_[REDACTED]' },
+  { re: /glpat-[a-zA-Z0-9\-]{6,}/g, replacement: 'glpat-[REDACTED]' },
+  { re: /xoxb-[a-zA-Z0-9\-]{6,}/g, replacement: 'xoxb-[REDACTED]' },
+  { re: /xoxp-[a-zA-Z0-9\-]{6,}/g, replacement: 'xoxp-[REDACTED]' },
+  // Specific named env vars must come before generic KEY=value to preserve key names
   { re: /(ANTHROPIC_API_KEY|OPENAI_API_KEY|TWILIO_AUTH_TOKEN|TWILIO_ACCOUNT_SID)=[^\s]+/g, replacement: '$1=[REDACTED]' },
+  { re: /(?:API_KEY|SECRET|TOKEN|PASSWORD|CREDENTIAL)=[^\s&\[]{3,}/gi, replacement: '[REDACTED]' },
 ];
 
 /**

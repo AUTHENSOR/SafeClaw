@@ -65,6 +65,7 @@ safeclaw run "Summarize this document"
 - **Webhooks** — Slack, Discord, and generic HTTP notifications
 - **Offline cache** — cached allow decisions for Authensor downtime (fail-safe: denies never cached)
 - **Workspace scoping** — project boundary detection, path restriction enforcement
+- **Risk signals** — advisory badges on approvals for obfuscated execution, credential access, pipe-to-external, destructive commands, and persistence mechanisms
 
 ## Security model
 
@@ -75,6 +76,7 @@ safeclaw run "Summarize this document"
 - **File permissions** — all sensitive files written with mode 0o600
 - **Rate limiting** — sliding window limits on all write API endpoints
 - **Fail closed** — if Authensor is unreachable and no cached allow exists, actions are denied
+- **Local pre-filter** — `safe.read.*` tools (Read, Glob, Grep, TodoWrite, AskUserQuestion, Skill, TaskOutput) are allowed locally without a control plane call. All other tools always go through Authensor
 - **Security headers** — CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, X-XSS-Protection
 - **Audit integrity** — SHA-256 hash chain on every audit entry, verifiable via `safeclaw audit verify`
 
@@ -82,7 +84,7 @@ safeclaw run "Summarize this document"
 
 | Action type | Effect | Examples |
 |------------|--------|----------|
-| `safe.read.*` | Allow | Read files, search, grep |
+| `safe.read.*` | Allow (local pre-filter) | Read, Glob, Grep, TodoWrite, AskUserQuestion, Skill |
 | `filesystem.*` | Require approval | Write/edit files |
 | `code.*` | Require approval | Bash commands |
 | `network.*` | Require approval | HTTP requests, web search |
@@ -161,7 +163,7 @@ src/
 ui/dashboard/     Browser dashboard (PWA, mobile-responsive, swipe approvals)
 ui/               Standalone approvals UI (auto-refreshes every 5s)
 policies/         Policy templates and schema
-tests/            418 tests across 24 files
+tests/            446 tests across 24 files
 Dockerfile        Container image for sandboxed execution
 ```
 

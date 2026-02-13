@@ -6,7 +6,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
+import { exec, execFile } from 'child_process';
 import { EventEmitter } from 'events';
 import { loadConfig, saveConfig, getProfile, ensureProfile, setActiveProfile, configPaths, loadDotEnv, writeEnvVar } from './config.js';
 import { AuthensorClient } from './authensor.js';
@@ -136,7 +136,7 @@ function setSecurityHeaders(res) {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'no-referrer');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';");
 }
 
 // --- Route handler ---
@@ -1270,6 +1270,19 @@ async function handleImportConfig(req, res) {
     const imported = [];
 
     if (body.config) {
+      // Validate critical fields to prevent control plane hijacking
+      if (body.config.controlPlane && typeof body.config.controlPlane === 'string') {
+        if (!/^https?:\/\//i.test(body.config.controlPlane)) {
+          throw new ValidationError('Invalid controlPlane URL');
+        }
+      }
+      if (body.config.profiles) {
+        for (const [name, profile] of Object.entries(body.config.profiles)) {
+          if (profile.controlPlane && !/^https?:\/\//i.test(profile.controlPlane)) {
+            throw new ValidationError(`Invalid controlPlane URL in profile "${name}"`);
+          }
+        }
+      }
       saveConfig(body.config);
       loadDotEnv();
       imported.push('config');
@@ -1412,12 +1425,9 @@ export function stopSchedulerTick() {
 
 function openBrowser(url) {
   const platform = process.platform;
-  let cmd;
-  if (platform === 'darwin') cmd = `open "${url}"`;
-  else if (platform === 'win32') cmd = `start "" "${url}"`;
-  else cmd = `xdg-open "${url}"`;
-
-  exec(cmd, () => {}); // fire and forget
+  if (platform === 'darwin') execFile('open', [url], () => {});
+  else if (platform === 'win32') exec(`start "" "${url}"`, () => {}); // Windows start requires shell
+  else execFile('xdg-open', [url], () => {});
 }
 
 // SSE connection tracking for graceful shutdown

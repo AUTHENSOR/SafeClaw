@@ -27,7 +27,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
     }
   }
 
-  function audit(result, { toolName, actionType, resource, receiptId = null, source }) {
+  function audit(result, { toolName, actionType, resource, receiptId = null, source, riskSignals = [] }) {
     try {
       appendEntry({
         timestamp: new Date().toISOString(),
@@ -39,6 +39,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
         taskId: taskId || null,
         profile: profileName || 'unknown',
         source,
+        riskSignals,
       });
     } catch {
       // Audit write failure must never block the gateway
@@ -55,14 +56,14 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
     const toolName = input.tool_name;
     const toolInput = input.tool_input;
 
-    const { actionType, resource } = classify(toolName, toolInput);
+    const { actionType, resource, riskSignals } = classify(toolName, toolInput);
 
     // Workspace path enforcement (before any other check)
     if (workspaceConfig && resource && isFilePathAction(actionType)) {
       const { isPathAllowed } = await import('./workspace.js');
       if (!isPathAllowed(resource, workspaceConfig)) {
         return audit(deny(`Path outside workspace: ${resource}`), {
-          toolName, actionType, resource, source: 'workspace_deny',
+          toolName, actionType, resource, riskSignals, source: 'workspace_deny',
         });
       }
     }
@@ -70,7 +71,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
     // Local pre-filter: safe reads skip the control plane entirely (no network call)
     if (isSafeRead(actionType)) {
       return audit(allow(`Local pre-filter: ${actionType} is safe`), {
-        toolName, actionType, resource, source: 'local_prefilter',
+        toolName, actionType, resource, riskSignals, source: 'local_prefilter',
       });
     }
 
@@ -101,7 +102,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
               `[SafeClaw] Control plane unreachable. Using cached allow for: ${actionType} on ${resource}\n`
             );
             return audit(allow(`Offline cache hit: ${actionType} on ${resource}`), {
-              toolName, actionType, resource, source: 'offline_cache',
+              toolName, actionType, resource, riskSignals, source: 'offline_cache',
             });
           }
         }
@@ -114,7 +115,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
         `[SafeClaw] Control plane unreachable: ${err.message}. Denying action.\n`
       );
       return audit(deny(`Authensor control plane unreachable (fail-closed): ${err.message}`), {
-        toolName, actionType, resource, source: 'fail_closed',
+        toolName, actionType, resource, riskSignals, source: 'fail_closed',
       });
     }
 
@@ -132,7 +133,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
         // Cache write failure must never block the gateway
       }
       return audit(allow(`Allowed by policy (receipt: ${receiptId})`), {
-        toolName, actionType, resource, receiptId, source: 'authensor',
+        toolName, actionType, resource, receiptId, riskSignals, source: 'authensor',
       });
     }
 
@@ -141,7 +142,7 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
         `[SafeClaw] Denied: ${actionType} on ${resource}\n`
       );
       return audit(deny(`Denied by policy: ${actionType} on ${resource} (receipt: ${receiptId})`), {
-        toolName, actionType, resource, receiptId, source: 'authensor',
+        toolName, actionType, resource, receiptId, riskSignals, source: 'authensor',
       });
     }
 
@@ -156,27 +157,27 @@ export function createGatewayHook({ controlPlaneUrl, authToken, approvalTimeoutS
 
       // Send SMS notification if Twilio is configured (non-blocking)
       if (isNotifyConfigured()) {
-        sendApprovalSMS({ actionType, resource, receiptId, installId }).catch(() => {});
+        sendApprovalSMS({ actionType, resource, receiptId, installId, riskSignals }).catch(() => {});
       }
 
       // Emit SSE event for dashboard
-      emit('agent:approval_required', { receiptId, actionType, resource });
+      emit('agent:approval_required', { receiptId, actionType, resource, riskSignals });
 
       // Webhook notification (fire-and-forget)
-      sendWebhook('approval_required', { actionType, resource, receiptId }).catch(() => {});
+      sendWebhook('approval_required', { actionType, resource, receiptId, riskSignals }).catch(() => {});
 
       const approvalResult = await pollForApproval(client, receiptId, approvalTimeoutSeconds, signal, actionType, resource);
       const wasApproved = approvalResult?.hookSpecificOutput?.permissionDecision === 'allow';
       emit('agent:approval_resolved', { receiptId, approved: wasApproved });
       sendWebhook('approval_resolved', { receiptId, approved: wasApproved }).catch(() => {});
       return audit(approvalResult, {
-        toolName, actionType, resource, receiptId, source: 'authensor',
+        toolName, actionType, resource, receiptId, riskSignals, source: 'authensor',
       });
     }
 
     // Unknown outcome → fail closed
     return audit(deny(`Unknown decision outcome: ${outcome}`), {
-      toolName, actionType, resource, receiptId, source: 'authensor',
+      toolName, actionType, resource, receiptId, riskSignals, source: 'authensor',
     });
   }
 

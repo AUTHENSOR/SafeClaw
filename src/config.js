@@ -97,6 +97,9 @@ export function loadDotEnv() {
  * Write a key=value pair to ~/.safeclaw/.env (chmod 600).
  */
 export function writeEnvVar(key, value) {
+  if (typeof value === 'string' && /[\r\n\0]/.test(value)) {
+    throw new Error('Invalid env value: contains newline or null byte');
+  }
   if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, { recursive: true });
   const envPath = getEnvFilePath();
 

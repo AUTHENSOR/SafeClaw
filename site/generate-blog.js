@@ -163,13 +163,13 @@ function blogPostHTML(meta, bodyHtml, isAiseo = false) {
   ${keywords ? `<meta name="keywords" content="${keywords}"/>` : ''}
   <meta name="author" content="${meta.author || 'Authensor'}"/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://safeclaw.onrender.com${backPath}${meta.slug}"/>
+  <link rel="canonical" href="https://safeclaw-site.pages.dev${backPath}${meta.slug}"/>
 
   <!-- Open Graph -->
   <meta property="og:title" content="${meta.title}"/>
   <meta property="og:description" content="${description}"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:url" content="https://safeclaw.onrender.com${backPath}${meta.slug}"/>
+  <meta property="og:url" content="https://safeclaw-site.pages.dev${backPath}${meta.slug}"/>
   <meta property="og:site_name" content="SafeClaw"/>
 
   <!-- Twitter -->
@@ -516,7 +516,7 @@ function blogIndexHTML(posts, isAiseo = false) {
   <title>${title} | SafeClaw by Authensor</title>
   <meta name="description" content="${subtitle}"/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://safeclaw.onrender.com${basePath}"/>
+  <link rel="canonical" href="https://safeclaw-site.pages.dev${basePath}"/>
   <link rel="icon" href="/icon.svg" type="image/svg+xml"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -663,7 +663,7 @@ function blogIndexHTML(posts, isAiseo = false) {
 }
 
 function generateSitemap(blogPosts, aiseoPosts) {
-  const base = 'https://safeclaw.onrender.com';
+  const base = 'https://safeclaw-site.pages.dev';
   let urls = `  <url><loc>${base}/</loc><priority>1.0</priority></url>\n`;
   urls += `  <url><loc>${base}/blog/</loc><priority>0.8</priority></url>\n`;
 
@@ -764,7 +764,7 @@ console.log('  Generated sitemap.xml');
 // robots.txt
 const robots = `User-agent: *
 Allow: /
-Sitemap: https://safeclaw.onrender.com/sitemap.xml
+Sitemap: https://safeclaw-site.pages.dev/sitemap.xml
 `;
 fs.writeFileSync(path.join(__dirname, 'robots.txt'), robots);
 console.log('  Generated robots.txt');

@@ -5,3 +5,9 @@ node_modules/
 .DS_Store
 coverage/
 .claude/
+
+# Generated SEO content — deployed separately, not part of the open source project
+site/blog/
+site/knowledge/
+site/sitemap.xml
+site/robots.txt

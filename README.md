@@ -6,6 +6,14 @@ SafeClaw intercepts every action your AI agent tries to take (file writes, shell
 
 Works with **Claude** and **OpenAI**. Open-source client. Free tier included.
 
+## Part of the Authensor Safety Stack
+
+SafeClaw is part of [Authensor](https://github.com/authensor/authensor) -- the open-source safety stack for AI agents. SafeClaw defaults to a self-hosted control plane at `http://localhost:3000`. Start the control plane locally with `npx authensor up`, then run SafeClaw -- no external services required.
+
+- **[Authensor](https://github.com/authensor/authensor)** — Policy engine & control plane for agent action authorization
+- **[SafeClaw](https://github.com/authensor/safeclaw)** — Local agent gating with approval workflows *(you are here)*
+- **[SpiroGrapher](https://github.com/authensor/spirographer)** — Web governance for browsing agents
+
 ![SafeClaw dashboard](docs/dashboard.png)
 
 ## Install
@@ -178,7 +186,7 @@ All config is stored in `~/.safeclaw/`:
 
 ## What stays private
 
-SafeClaw's client is fully open source: the agent, classifier, policy engine, dashboard, and all 446 tests are right here on GitHub. The Authensor control plane is a hosted service that evaluates action metadata against your policy. It only sees what the agent wants to do (e.g., "write a file to /tmp"), never your API keys, file contents, or data.
+SafeClaw's client is fully open source: the agent, classifier, policy engine, dashboard, and all 446 tests are right here on GitHub. The Authensor control plane runs locally by default (`http://localhost:3000`) and evaluates action metadata against your policy. It only sees what the agent wants to do (e.g., "write a file to /tmp"), never your API keys, file contents, or data. Start the control plane with `npx authensor up`.
 
 If the control plane is unreachable, SafeClaw fails closed. Every action is denied. Nothing slips through.
 
@@ -186,4 +194,4 @@ If the control plane is unreachable, SafeClaw fails closed. Every action is deni
 
 MIT
 
-Powered by [Authensor](https://github.com/AUTHENSOR)
+Powered by [Authensor](https://github.com/authensor/authensor)

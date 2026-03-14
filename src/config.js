@@ -34,7 +34,7 @@ export function ensureProfile(cfg, name) {
   if (!cfg.profiles[name]) {
     cfg.profiles[name] = {
       installId: crypto.randomUUID(),
-      controlPlane: 'https://authensor-api-production.up.railway.app',
+      controlPlane: 'http://localhost:3000',
       authToken: '',
       provider: { name: 'claude', apiKeyEnv: 'ANTHROPIC_API_KEY', model: '' },
       policy: { path: defaultPolicyPath(name), id: '' }

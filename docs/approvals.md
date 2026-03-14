@@ -38,7 +38,7 @@ safeclaw approvals reject rcpt_abc123
 Open the thin UI with your control plane URL and install ID:
 
 ```
-http://localhost:8080/ui/?controlPlane=https://authensor-api-production.up.railway.app&installId=your-id
+http://localhost:7702/approvals/?controlPlane=http://localhost:3000&installId=your-id
 ```
 
 ## Approve via email (if configured)

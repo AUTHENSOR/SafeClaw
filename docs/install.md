@@ -3,8 +3,8 @@
 ## Prerequisites
 
 - Node.js 20+
-- An Anthropic API key
-- An Authensor demo token
+- An Anthropic API key (or OpenAI key with `--provider openai`)
+- An Authensor control plane (self-host with `npx authensor up`, or request a demo token)
 
 ## CLI
 
@@ -19,10 +19,10 @@ This makes the `safeclaw` command available globally.
 
 ## Thin UI
 
-Serve the `ui/` folder as static files. Pass `controlPlane` and `installId` as query params if hosted separately:
+The thin approvals UI is served by the SafeClaw dashboard at `http://localhost:7702/approvals/`. To point it at a different control plane or install ID, pass query params:
 
 ```
-https://your-ui-host/ui/?controlPlane=https://authensor-api-production.up.railway.app&installId=your-install-id
+http://localhost:7702/approvals/?controlPlane=http://localhost:3000&installId=your-install-id
 ```
 
 ## Auth
@@ -34,6 +34,7 @@ safeclaw init --auth-token <your-token>
 ```
 
 Get a demo token: https://forms.gle/QdfeWAr2G4pc8GxQA
+Or self-host the control plane: `npx authensor up` (runs at http://localhost:3000)
 
 ## Verify setup
 

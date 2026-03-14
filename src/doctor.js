@@ -109,19 +109,27 @@ export async function runDiagnostics() {
   }
 
   // 8. Authensor connectivity
-  if (profile?.authToken) {
+  // Try reaching the control plane even without an auth token (self-hosted may not require one)
+  {
+    const cpUrl = profile?.controlPlane || 'http://localhost:3000';
+    const client = new AuthensorClient({
+      controlPlaneUrl: cpUrl,
+      authToken: profile?.authToken || '',
+    });
     try {
-      const client = new AuthensorClient({
-        controlPlaneUrl: profile.controlPlane,
-        authToken: profile.authToken,
-      });
       await client.health();
-      checks.push({ name: 'Authensor connectivity', status: 'ok', message: `Connected to ${profile.controlPlane}`, hint: null });
+      if (profile?.authToken) {
+        checks.push({ name: 'Authensor connectivity', status: 'ok', message: `Connected to ${cpUrl}`, hint: null });
+      } else {
+        checks.push({ name: 'Authensor connectivity', status: 'ok', message: `Connected to ${cpUrl} (no auth token — self-hosted mode)`, hint: null });
+      }
     } catch (err) {
-      checks.push({ name: 'Authensor connectivity', status: 'fail', message: err.message, hint: 'Check your network connection or Authensor token' });
+      if (profile?.authToken) {
+        checks.push({ name: 'Authensor connectivity', status: 'fail', message: err.message, hint: `Check that the control plane is running at ${cpUrl} and your token is valid` });
+      } else {
+        checks.push({ name: 'Authensor connectivity', status: 'warn', message: `Control plane unreachable at ${cpUrl}`, hint: `Start the local control plane with: npx authensor up (or set an auth token for a hosted instance)` });
+      }
     }
-  } else {
-    checks.push({ name: 'Authensor connectivity', status: 'fail', message: 'No auth token configured', hint: 'Add your Authensor token in Settings > Configuration' });
   }
 
   // 9. Container runtime (optional)

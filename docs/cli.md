@@ -145,7 +145,7 @@ Location: `~/.safeclaw/config.json`
   "profiles": {
     "default": {
       "installId": "2f8f2a0a-8d1c-4d1c-b76b-2d95bdf5b3f9",
-      "controlPlane": "https://authensor-api-production.up.railway.app",
+      "controlPlane": "http://localhost:3000",
       "authToken": "authensor_...",
       "provider": {
         "name": "claude",

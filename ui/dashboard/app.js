@@ -444,9 +444,9 @@ async function requestDemoToken() {
     } else {
       // Endpoint not available -open the form
       window.open(result.formUrl || 'https://forms.gle/QdfeWAr2G4pc8GxQA', '_blank');
-      status.textContent = 'Form opened in new tab';
+      status.textContent = 'Form opened in new tab. Or self-host: npx authensor up';
       var help = document.getElementById('demo-token-help');
-      if (help) help.textContent = 'Fill out the form, check your email for the token, then paste it below.';
+      if (help) help.textContent = 'Fill out the form, check your email for the token, then paste it below. Or self-host the control plane with: npx authensor up';
     }
   } catch (err) {
     status.textContent = 'Failed: ' + err.message;

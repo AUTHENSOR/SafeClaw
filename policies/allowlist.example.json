@@ -10,7 +10,7 @@
       "condition": {
         "all": [
           { "field": "action.type", "operator": "eq", "value": "network.http" },
-          { "field": "action.resource", "operator": "startsWith", "value": "https://docs.safeclaw.ai" }
+          { "field": "action.resource", "operator": "startsWith", "value": "https://docs.example.com" }
         ]
       }
     }

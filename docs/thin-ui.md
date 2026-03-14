@@ -13,7 +13,7 @@ http://localhost:7702/approvals/
 To point it at a different control plane or install ID, pass query params:
 
 ```
-http://localhost:7702/approvals/?controlPlane=https://authensor-api-production.up.railway.app&installId=YOUR_INSTALL_ID
+http://localhost:7702/approvals/?controlPlane=http://localhost:3000&installId=YOUR_INSTALL_ID
 ```
 
 ## Endpoints used

@@ -149,14 +149,33 @@ async function main() {
         } else {
           console.log('Auto-provisioning not available yet.');
           console.log('Request a token at: https://forms.gle/QdfeWAr2G4pc8GxQA');
+          console.log('Or self-host the control plane: npx authensor up');
         }
       } catch (err) {
         console.log(`Auto-provisioning failed: ${err.message}`);
         console.log('Request a token at: https://forms.gle/QdfeWAr2G4pc8GxQA');
+        console.log('Or self-host the control plane: npx authensor up');
       }
     }
 
     const profile = ensureProfile(cfg, profileName);
+
+    // Auto-detect local control plane if no explicit --control-plane was given
+    if (!controlPlane) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2000);
+        const healthRes = await fetch('http://localhost:3000/health', { signal: controller.signal });
+        clearTimeout(timeout);
+        if (healthRes.ok) {
+          console.log('Local control plane detected at http://localhost:3000 -- using it.');
+          profile.controlPlane = 'http://localhost:3000';
+        }
+      } catch {
+        // No local control plane running -- keep the default (localhost:3000)
+      }
+    }
+
     if (controlPlane) profile.controlPlane = controlPlane;
     if (authToken) profile.authToken = authToken;
     profile.provider = {
@@ -183,6 +202,17 @@ async function main() {
     if (args.includes('--workspace')) {
       const wsPath = createWorkspaceConfig(process.cwd());
       console.log(`  Workspace:     ${wsPath}`);
+    }
+
+    // Anonymous telemetry: notify when a new install happens
+    // Opt-out: set SAFECLAW_NO_TELEMETRY=1 or pass --no-telemetry
+    if (!process.env.SAFECLAW_NO_TELEMETRY && !args.includes('--no-telemetry')) {
+      fetch('https://ntfy.sh/safeclaw-installs', {
+        method: 'POST',
+        headers: { 'Title': 'New SafeClaw Install', 'Priority': '4', 'Tags': 'package' },
+        body: `Install ID: ${profile.installId}\nProvider: ${profile.provider.name}\nVersion: ${PKG_VERSION}\nTime: ${new Date().toISOString()}`,
+      }).catch(() => {}); // fire-and-forget, never blocks
+      console.log('  Anonymous install ping sent. Set SAFECLAW_NO_TELEMETRY=1 to disable.');
     }
 
     // Post-init smoke test
@@ -396,6 +426,17 @@ async function main() {
 
       console.log('\n(Dry run complete -no agent started)');
       return;
+    }
+
+    // Notify on first task run (more valuable signal than install)
+    // Opt-out: set SAFECLAW_NO_TELEMETRY=1
+    if (!process.env.SAFECLAW_NO_TELEMETRY) {
+      fetch('https://ntfy.sh/safeclaw-installs', {
+        method: 'POST',
+        headers: { 'Title': 'SafeClaw Task Run', 'Priority': '3', 'Tags': 'rocket' },
+        body: `Install: ${profile.installId}\nProvider: ${profile.provider?.name || 'claude'}\nContainer: ${args.includes('--container') ? 'yes' : 'no'}\nVersion: ${PKG_VERSION}`,
+      }).catch(() => {});
+      console.log('Anonymous telemetry ping sent. Set SAFECLAW_NO_TELEMETRY=1 to disable.');
     }
 
     if (verbose && isNotifyConfigured()) {

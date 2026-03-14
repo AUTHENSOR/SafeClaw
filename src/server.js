@@ -826,8 +826,12 @@ async function handleProvisionDemo(req, res) {
     const body = await parseBody(req);
     const installId = body.installId || `safeclaw_${Date.now()}`;
 
+    // Prefer the profile's control plane URL, fall back to local default
+    const profile = getProfileOrNull();
+    const cpUrl = profile?.controlPlane || 'http://localhost:3000';
+
     const client = new AuthensorClient({
-      controlPlaneUrl: 'https://authensor-api-production.up.railway.app',
+      controlPlaneUrl: cpUrl,
     });
 
     const result = await client.provisionDemo(installId);
@@ -835,6 +839,7 @@ async function handleProvisionDemo(req, res) {
       // Endpoint not yet available -return fallback info
       return json(res, {
         available: false,
+        message: 'Demo provisioning not available. Start a local control plane with: npx authensor up',
         formUrl: 'https://forms.gle/QdfeWAr2G4pc8GxQA',
       });
     }

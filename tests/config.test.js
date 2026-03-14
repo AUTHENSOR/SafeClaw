@@ -40,7 +40,7 @@ describe('ensureProfile', () => {
 
     expect(profile.installId).toBeDefined();
     expect(profile.installId.length).toBeGreaterThan(10);
-    expect(profile.controlPlane).toBe('https://authensor-api-production.up.railway.app');
+    expect(profile.controlPlane).toBe('http://localhost:3000');
     expect(profile.authToken).toBe('');
     expect(profile.provider.name).toBe('claude');
     expect(profile.provider.apiKeyEnv).toBe('ANTHROPIC_API_KEY');

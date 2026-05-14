@@ -10,9 +10,9 @@ Works with **Claude** and **OpenAI**. Open-source client. Free tier included.
 
 SafeClaw is part of [Authensor](https://github.com/AUTHENSOR/AUTHENSOR) -- the open-source safety stack for AI agents. SafeClaw defaults to a self-hosted control plane at `http://localhost:3000`. Start the control plane locally with `npx authensor up`, then run SafeClaw -- no external services required.
 
-- **[Authensor](https://github.com/AUTHENSOR/AUTHENSOR)** — Policy engine & control plane for agent action authorization
-- **[SafeClaw](https://github.com/AUTHENSOR/SafeClaw)** — Local agent gating with approval workflows *(you are here)*
-- **[SiteSitter](https://github.com/AUTHENSOR/SiteSitter)** — Web governance for browsing agents
+- **[Authensor](https://github.com/AUTHENSOR/AUTHENSOR)** - Policy engine & control plane for agent action authorization
+- **[SafeClaw](https://github.com/AUTHENSOR/SafeClaw)** - Local agent gating with approval workflows *(you are here)*
+- **[SiteSitter](https://github.com/AUTHENSOR/SiteSitter)** - Web governance for browsing agents
 
 ![SafeClaw dashboard](docs/dashboard.png)
 

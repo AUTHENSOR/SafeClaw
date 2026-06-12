@@ -4,7 +4,7 @@
 
 - Node.js 20+
 - An Anthropic API key (or OpenAI key with `--provider openai`)
-- An Authensor control plane (self-host with `npx authensor up`, or request a demo token)
+- An Authensor control plane (self-host: clone [AUTHENSOR/AUTHENSOR](https://github.com/AUTHENSOR/AUTHENSOR) and run `docker compose up -d`)
 
 ## CLI
 
@@ -34,7 +34,7 @@ safeclaw init --auth-token <your-token>
 ```
 
 Get a demo token: https://forms.gle/QdfeWAr2G4pc8GxQA
-Or self-host the control plane: `npx authensor up` (runs at http://localhost:3000)
+Or self-host the control plane: clone [AUTHENSOR/AUTHENSOR](https://github.com/AUTHENSOR/AUTHENSOR) and run `docker compose up -d` (runs at http://localhost:3000)
 
 ## Verify setup
 

@@ -11,7 +11,7 @@ Works with **Claude** and **OpenAI**. Open-source client. Free tier included.
 
 ## Part of the Authensor Safety Stack
 
-SafeClaw is part of [Authensor](https://github.com/AUTHENSOR/AUTHENSOR) -- the open-source safety stack for AI agents. SafeClaw defaults to a self-hosted control plane at `http://localhost:3000`. Start the control plane locally with `npx authensor up`, then run SafeClaw -- no external services required.
+SafeClaw is part of [Authensor](https://github.com/AUTHENSOR/AUTHENSOR) -- the open-source safety stack for AI agents. SafeClaw defaults to a self-hosted control plane at `http://localhost:3000`. Start one by cloning [AUTHENSOR/AUTHENSOR](https://github.com/AUTHENSOR/AUTHENSOR) and running `docker compose up -d` (it serves `http://localhost:3000`), then run SafeClaw -- no external services required.
 
 - **[Authensor](https://github.com/AUTHENSOR/AUTHENSOR)** - Policy engine & control plane for agent action authorization
 - **[SafeClaw](https://github.com/AUTHENSOR/SafeClaw)** - Local agent gating with approval workflows *(you are here)*
@@ -120,7 +120,6 @@ You give the agent a task
 safeclaw                          # Open the browser dashboard
 safeclaw init                     # Set up a profile (default: Claude)
 safeclaw init --provider openai   # Set up with OpenAI/GPT-4o
-safeclaw init --demo              # Auto-provision a demo Authensor token
 safeclaw init --workspace         # Initialize workspace scoping
 safeclaw run "task"               # Run a task locally
 safeclaw run --container "task"   # Run inside Docker/Podman
@@ -206,7 +205,7 @@ All config is stored in `~/.safeclaw/`:
 
 ## What stays private
 
-SafeClaw's client is fully open source: the agent, classifier, policy engine, dashboard, and all 446 tests are right here on GitHub. The Authensor control plane runs locally by default (`http://localhost:3000`) and evaluates action metadata against your policy. It only sees what the agent wants to do (e.g., "write a file to /tmp"), never your API keys, file contents, or data. Start the control plane with `npx authensor up`.
+SafeClaw's client is fully open source: the agent, classifier, policy engine, dashboard, and all 446 tests are right here on GitHub. The Authensor control plane runs locally by default (`http://localhost:3000`) and evaluates action metadata against your policy. It only sees what the agent wants to do (e.g., "write a file to /tmp"), never your API keys, file contents, or data. Start the control plane by cloning [AUTHENSOR/AUTHENSOR](https://github.com/AUTHENSOR/AUTHENSOR) and running `docker compose up -d`.
 
 If the control plane is unreachable, SafeClaw fails closed. Every action is denied. Nothing slips through.
 

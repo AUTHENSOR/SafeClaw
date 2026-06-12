@@ -127,7 +127,7 @@ export async function runDiagnostics() {
       if (profile?.authToken) {
         checks.push({ name: 'Authensor connectivity', status: 'fail', message: err.message, hint: `Check that the control plane is running at ${cpUrl} and your token is valid` });
       } else {
-        checks.push({ name: 'Authensor connectivity', status: 'warn', message: `Control plane unreachable at ${cpUrl}`, hint: `Start the local control plane with: npx authensor up (or set an auth token for a hosted instance)` });
+        checks.push({ name: 'Authensor connectivity', status: 'warn', message: `Control plane unreachable at ${cpUrl}`, hint: `Start a local control plane: clone github.com/AUTHENSOR/AUTHENSOR and run "docker compose up -d" (serves http://localhost:3000), or set an auth token for a hosted instance` });
       }
     }
   }

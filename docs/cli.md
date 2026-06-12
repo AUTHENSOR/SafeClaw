@@ -27,7 +27,6 @@ Flags:
 - `--api-key-env <var>` -- environment variable for your API key (default: `ANTHROPIC_API_KEY`)
 - `--provider <name>` -- AI provider: `claude` (default) or `openai`
 - `--model <model>` -- model override (e.g. `gpt-4o`, `gpt-4o-mini`)
-- `--demo` -- auto-provision a demo Authensor token
 - `--workspace` -- create a `.safeclaw.json` workspace config in the current directory
 
 ### run
@@ -166,12 +165,12 @@ Location: `~/.safeclaw/config.json`
 ```bash
 # First-time setup with Claude
 export ANTHROPIC_API_KEY=sk-ant-...
-safeclaw init --demo
+safeclaw init
 safeclaw run "List all TODO comments in this project"
 
 # Setup with OpenAI instead
 export OPENAI_API_KEY=sk-...
-safeclaw init --provider openai --api-key-env OPENAI_API_KEY --demo
+safeclaw init --provider openai --api-key-env OPENAI_API_KEY
 
 # Dry-run to preview config and policy
 safeclaw run "Refactor the auth module" --dry-run

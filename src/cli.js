@@ -149,12 +149,12 @@ async function main() {
         } else {
           console.log('Auto-provisioning not available yet.');
           console.log('Request a token at: https://forms.gle/QdfeWAr2G4pc8GxQA');
-          console.log('Or self-host the control plane: npx authensor up');
+          console.log('Or self-host the control plane: clone github.com/AUTHENSOR/AUTHENSOR and run: docker compose up -d (serves http://localhost:3000)');
         }
       } catch (err) {
         console.log(`Auto-provisioning failed: ${err.message}`);
         console.log('Request a token at: https://forms.gle/QdfeWAr2G4pc8GxQA');
-        console.log('Or self-host the control plane: npx authensor up');
+        console.log('Or self-host the control plane: clone github.com/AUTHENSOR/AUTHENSOR and run: docker compose up -d (serves http://localhost:3000)');
       }
     }
 

@@ -40,10 +40,10 @@ export OPENAI_API_KEY=sk-...
 The setup wizard handles this automatically. Or via CLI:
 
 ```bash
-safeclaw init --demo
+safeclaw init
 ```
 
-This creates a profile at `~/.safeclaw/config.json` with a unique install ID, a demo Authensor token, and a deny-by-default policy.
+This creates a profile at `~/.safeclaw/config.json` with a unique install ID and a deny-by-default policy, and auto-detects a local control plane at `http://localhost:3000` if one is running.
 
 ## 4. Run a task
 

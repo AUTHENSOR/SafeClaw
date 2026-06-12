@@ -839,7 +839,7 @@ async function handleProvisionDemo(req, res) {
       // Endpoint not yet available -return fallback info
       return json(res, {
         available: false,
-        message: 'Demo provisioning not available. Start a local control plane with: npx authensor up',
+        message: 'Demo provisioning not available. Self-host a control plane: clone github.com/AUTHENSOR/AUTHENSOR and run "docker compose up -d" (serves http://localhost:3000).',
         formUrl: 'https://forms.gle/QdfeWAr2G4pc8GxQA',
       });
     }

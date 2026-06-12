@@ -1,6 +1,5 @@
 # SafeClaw
 
-[![npm](https://img.shields.io/npm/v/@authensor/safeclaw)](https://www.npmjs.com/package/@authensor/safeclaw)
 [![node](https://img.shields.io/node/v/@authensor/safeclaw)](https://nodejs.org/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -28,6 +27,24 @@ npx @authensor/safeclaw
 Your browser opens. A wizard walks you through everything: pick your AI provider, paste your API key, and you're running.
 
 > **Need Node.js?** Download it at [nodejs.org](https://nodejs.org/) (v20+). That's the only prerequisite.
+
+### First run (no control plane yet)
+
+You can try SafeClaw before standing up a control plane. Once the wizard (or `safeclaw init`) has saved your provider API key, this works standalone and exits 0:
+
+```bash
+safeclaw run --dry-run "Summarize README.md"
+```
+
+It prints your provider, profile, and a policy simulation -- no agent is started and nothing leaves your machine. Read-only tasks (`Read`, `Glob`, `Grep`, ...) also run locally without a control plane.
+
+What to expect until a control plane is up, all **by design**:
+
+- **Write / exec / network actions fail closed.** SafeClaw denies anything that isn't a local read until it can check it against a policy. That's the point -- nothing risky runs unchecked.
+- **`safeclaw doctor` shows a `[WARN]` on "Authensor connectivity"** ("Control plane unreachable"). Every other check still passes once your API key is set. This warning is expected, not an error.
+- **`safeclaw health` reports "Control plane unreachable" and exits non-zero.** `health` is a pure connectivity probe -- a non-zero exit here just means no control plane is running yet.
+
+To progress past read-only and dry-run actions, start a control plane (see [Part of the Authensor Safety Stack](#part-of-the-authensor-safety-stack) above) and re-run.
 
 ### Other install options
 

@@ -1,5 +1,9 @@
 # SafeClaw
 
+[![npm](https://img.shields.io/npm/v/@authensor/safeclaw)](https://www.npmjs.com/package/@authensor/safeclaw)
+[![node](https://img.shields.io/node/v/@authensor/safeclaw)](https://nodejs.org/)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **AI agents that ask before they act.**
 
 SafeClaw intercepts every action your AI agent tries to take (file writes, shell commands, network requests) and checks it against a safety policy before it executes. If something looks risky, you get asked first. Nothing runs without your say-so.
@@ -12,7 +16,6 @@ SafeClaw is part of [Authensor](https://github.com/AUTHENSOR/AUTHENSOR) -- the o
 
 - **[Authensor](https://github.com/AUTHENSOR/AUTHENSOR)** - Policy engine & control plane for agent action authorization
 - **[SafeClaw](https://github.com/AUTHENSOR/SafeClaw)** - Local agent gating with approval workflows *(you are here)*
-- **[SiteSitter](https://github.com/AUTHENSOR/SiteSitter)** - Web governance for browsing agents
 
 ![SafeClaw dashboard](docs/dashboard.png)
 

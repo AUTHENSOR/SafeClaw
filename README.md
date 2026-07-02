@@ -1,9 +1,14 @@
-# SafeClaw
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.svg">
+    <img src=".github/assets/banner-light.svg" alt="SafeClaw" width="700">
+  </picture>
+</p>
 
-[![node](https://img.shields.io/node/v/@authensor/safeclaw)](https://nodejs.org/)
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
-**AI agents that ask before they act.**
+<p align="center">
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/@authensor/safeclaw?style=flat-square&labelColor=1a1a1a&color=C9A227" alt="node"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-722F37?style=flat-square&labelColor=1a1a1a" alt="license: MIT"></a>
+</p>
 
 SafeClaw intercepts every action your AI agent tries to take (file writes, shell commands, network requests) and checks it against a safety policy before it executes. If something looks risky, you get asked first. Nothing runs without your say-so.
 
@@ -11,7 +16,7 @@ Works with **Claude** and **OpenAI**. Open-source client. Free tier included.
 
 ## Part of the Authensor Safety Stack
 
-SafeClaw is part of [Authensor](https://github.com/AUTHENSOR/AUTHENSOR) -- the open-source safety stack for AI agents. SafeClaw defaults to a self-hosted control plane at `http://localhost:3000`. Start one by cloning [AUTHENSOR/AUTHENSOR](https://github.com/AUTHENSOR/AUTHENSOR) and running `docker compose up -d` (it serves `http://localhost:3000`), then run SafeClaw -- no external services required.
+SafeClaw is part of [Authensor](https://github.com/AUTHENSOR/AUTHENSOR), the open-source safety stack for AI agents. SafeClaw defaults to a self-hosted control plane at `http://localhost:3000`. Start one by cloning [AUTHENSOR/AUTHENSOR](https://github.com/AUTHENSOR/AUTHENSOR) and running `docker compose up -d` (it serves `http://localhost:3000`), then run SafeClaw. No external services required.
 
 - **[Authensor](https://github.com/AUTHENSOR/AUTHENSOR)** - Policy engine & control plane for agent action authorization
 - **[SafeClaw](https://github.com/AUTHENSOR/SafeClaw)** - Local agent gating with approval workflows *(you are here)*
@@ -36,13 +41,13 @@ You can try SafeClaw before standing up a control plane. Once the wizard (or `sa
 safeclaw run --dry-run "Summarize README.md"
 ```
 
-It prints your provider, profile, and a policy simulation -- no agent is started and nothing leaves your machine. Read-only tasks (`Read`, `Glob`, `Grep`, ...) also run locally without a control plane.
+It prints your provider, profile, and a policy simulation. No agent is started and nothing leaves your machine. Read-only tasks (`Read`, `Glob`, `Grep`, ...) also run locally without a control plane.
 
 What to expect until a control plane is up, all **by design**:
 
-- **Write / exec / network actions fail closed.** SafeClaw denies anything that isn't a local read until it can check it against a policy. That's the point -- nothing risky runs unchecked.
+- **Write / exec / network actions fail closed.** SafeClaw denies anything that isn't a local read until it can check it against a policy. That's the point: nothing risky runs unchecked.
 - **`safeclaw doctor` shows a `[WARN]` on "Authensor connectivity"** ("Control plane unreachable"). Every other check still passes once your API key is set. This warning is expected, not an error.
-- **`safeclaw health` reports "Control plane unreachable" and exits non-zero.** `health` is a pure connectivity probe -- a non-zero exit here just means no control plane is running yet.
+- **`safeclaw health` reports "Control plane unreachable" and exits non-zero.** `health` is a pure connectivity probe; a non-zero exit here just means no control plane is running yet.
 
 To progress past read-only and dry-run actions, start a control plane (see [Part of the Authensor Safety Stack](#part-of-the-authensor-safety-stack) above) and re-run.
 

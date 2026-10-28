@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **SafeClaw is retired (October 2026) and no longer maintained.** Authensor now works on AI evaluation integrity: [www.authensor.com](https://www.authensor.com).
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.svg">
